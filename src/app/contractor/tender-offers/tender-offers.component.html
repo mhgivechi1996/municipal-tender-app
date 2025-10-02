@@ -1,0 +1,84 @@
+<p  class="pageName">لیست مناقصه های فعال</p>
+
+<div class="actionBar">
+ 
+</div>
+
+<nz-table
+  nzShowSizeChanger
+  [nzData]="list"
+  [nzFrontPagination]="false"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+    <tr>
+      <th>عملیات</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">Id</th>
+      <th nzColumnKey="Title">عنوان</th>
+      <th nzColumnKey="Description">توضیحات</th>
+      <th nzColumnKey="BeginDate">شروع</th>
+      <th nzColumnKey="EndDate">پایان</th>
+      <th nzColumnKey="FromPrice">مبلغ از</th>
+      <th nzColumnKey="ToPrice">مبلغ تا</th>
+      <th nzColumnKey="MinPriceOffer">کمترین پیشنهاد</th>
+      <th nzColumnKey="UsersCount">تعداد شرکت کننده</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of list">
+      <td>       
+        <a (click)="addRow(data)"> پیشنهاد </a>
+      </td>
+      <td>{{ data.Id }}</td>
+      <td>{{ data.Title }}</td>
+      <td>{{ data.Description }}</td>
+      <td>{{ data.BeginDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.EndDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.FromPrice | number }}</td>
+      <td>{{ data.ToPrice | number}}</td>
+      <td>{{ data.Report.MinPriceOffer | number}}</td>
+      <td>{{ data.Report.UsersCount | number}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<form nz-form [formGroup]="validateForm" >
+  <nz-modal
+    [(nzVisible)]="isEditModalVisible"
+    nzTitle="ثبت پیشنهاد قیمت برای مناقصه"
+    nzOkText="ثبت"
+    nzCancelText="انصراف"
+    (nzOnOk)="submitForm()"
+    (nzOnCancel)="isEditModalVisible = false"
+  >
+    <ng-container *nzModalContent>
+     
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24">عنوان مناقصه</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+                {{row.Title}}
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="8" [nzXs]="24">بازه مبلغ مناقصه</nz-form-label>
+          <nz-form-control [nzSm]="16" [nzXs]="24">
+              از : {{row.FromPrice | number}} تا : {{row.ToPrice | number}}
+          </nz-form-control>
+        </nz-form-item>
+
+    
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ پیشنهادی</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+                <nz-input-number formControlName="PriceOffer" [nzMin]="0" [nzMax]="2000000000" [nzStep]="1000" style="width:200px"></nz-input-number>
+            </nz-form-control>
+        </nz-form-item>
+      
+    </ng-container>
+  </nz-modal>
+</form>

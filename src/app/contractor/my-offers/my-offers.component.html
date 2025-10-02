@@ -1,0 +1,87 @@
+<p  class="pageName">لیست مناقصه های من</p>
+
+<div class="actionBar">
+ 
+</div>
+
+<nz-table
+  nzShowSizeChanger
+  [nzData]="list"
+  [nzFrontPagination]="false"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+    <tr>
+      <th>عملیات</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">Id</th>
+      <th nzColumnKey="Title">عنوان</th>
+      <th nzColumnKey="BeginDate">شروع</th>
+      <th nzColumnKey="EndDate">پایان</th>
+      <th nzColumnKey="FromPrice">مبلغ از</th>
+      <th nzColumnKey="ToPrice">مبلغ تا</th>      
+      <th nzColumnKey="MinPriceOffer">کمترین پیشنهاد</th>
+      <th nzColumnKey="UsersCount">تعداد شرکت کننده</th>
+      <th nzColumnKey="PriceOffer">پیشنهاد من</th>
+      <th nzColumnKey="Date">تاریخ ثبت</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of list">
+      <td>       
+        <a
+          nz-popconfirm
+          nzPopconfirmTitle="آیا از حذف مطمئن هستید?"
+          (nzOnConfirm)="deleteRow(data.Id)"
+          nzCancelText="انصراف"
+          nzOkText="تایید"
+        >
+          حذف
+        </a>
+        <a (click)="editRow(data)"> ویرایش </a>
+      </td>
+      <td>{{ data.Id }}</td>
+      <td>{{ data.TenderOffer.Title }}</td>
+      <td>{{ data.TenderOffer.BeginDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.TenderOffer.EndDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.TenderOffer.FromPrice | number }}</td>
+      <td>{{ data.TenderOffer.ToPrice | number}}</td>
+      <td>{{ data.TenderOffer.Report.MinPriceOffer | number}}</td>
+      <td>{{ data.TenderOffer.Report.UsersCount | number}}</td>
+      <td>{{ data.PriceOffer | number}}</td>
+      <td>{{ data.Date | date:"yyyy-MM-dd HH:mm" }}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<form nz-form [formGroup]="validateForm" >
+  <nz-modal
+    [(nzVisible)]="isEditModalVisible"
+    nzTitle="ثبت پیشنهاد قیمت برای مناقصه"
+    nzOkText="ثبت"
+    nzCancelText="انصراف"
+    (nzOnOk)="submitForm()"
+    (nzOnCancel)="isEditModalVisible = false"
+  >
+    <ng-container *nzModalContent>
+     
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24">عنوان مناقصه</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+                {{row.TenderOffer.Title}}
+            </nz-form-control>
+        </nz-form-item>
+      
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ پیشنهادی</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+                <nz-input-number formControlName="PriceOffer" [nzMin]="0" [nzMax]="2000000000" [nzStep]="1000" style="width:200px"></nz-input-number>
+            </nz-form-control>
+        </nz-form-item>
+      
+    </ng-container>
+  </nz-modal>
+</form>

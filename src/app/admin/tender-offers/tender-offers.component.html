@@ -1,0 +1,126 @@
+<p class="pageName">مدیریت مناقصه ها</p>
+
+<div class="actionBar">
+  <button
+    nz-button
+    class="login-form-button login-form-margin"
+    [nzType]="'primary'"
+    (click)="addRow()"
+  >
+    جدید
+  </button>
+</div>
+
+<nz-table
+  nzShowSizeChanger
+  [nzData]="list"
+  [nzFrontPagination]="false"
+  [nzLoading]="loading"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="pageIndex"
+  (nzQueryParams)="onQueryParamsChange($event)"
+>
+  <thead>
+    <tr>
+      <th>عملیات</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">Id</th>
+      <th nzColumnKey="Title">عنوان</th>
+      <th nzColumnKey="Description">توضیحات</th>
+      <th nzColumnKey="BeginDate">شروع</th>
+      <th nzColumnKey="EndDate">پایان</th>
+      <th nzColumnKey="FromPrice">مبلغ از</th>
+      <th nzColumnKey="ToPrice">مبلغ تا</th>
+      <th nzColumnKey="MinPriceOffer">کمترین پیشنهاد</th>
+      <th nzColumnKey="UsersCount">تعداد شرکت کننده</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of list">
+      <td>
+        <a
+          nz-popconfirm
+          nzPopconfirmTitle="آیا از حذف مطمئن هستید?"
+          (nzOnConfirm)="deleteRow(data.Id)"
+          nzCancelText="انصراف"
+          nzOkText="تایید"
+        >
+          حذف
+        </a>
+        <a (click)="editRow(data)"> ویرایش </a>
+      </td>
+      <td>{{ data.Id }}</td>
+      <td>{{ data.Title }}</td>
+      <td>{{ data.Description }}</td>
+      <td>{{ data.BeginDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.EndDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.FromPrice | number }}</td>
+      <td>{{ data.ToPrice | number}}</td>
+      <td>{{ data.Report.MinPriceOffer | number}}</td>
+      <td>{{ data.Report.UsersCount | number}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<form nz-form [formGroup]="validateForm" >
+  <nz-modal
+    [(nzVisible)]="isEditModalVisible"
+    nzTitle="ثبت و ویرایش مناقصه"
+    nzOkText="ثبت"
+    nzCancelText="انصراف"
+    (nzOnOk)="submitForm()"
+    (nzOnCancel)="isEditModalVisible = false"
+  >
+    <ng-container *nzModalContent>
+     
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>عنوان</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+                <input type="text" nz-input formControlName="Title" placeholder="عنوان"/>
+            </nz-form-control>
+        </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24">توضیحات</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+            <textarea formControlName="Description" nz-input rows="2" placeholder=""></textarea>
+        </nz-form-control>
+      </nz-form-item>
+     
+      
+      
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>شروع</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+            <nz-date-picker formControlName="BeginDate" nzPlaceHolder="شروع"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>پایان</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+            <nz-date-picker formControlName="EndDate" nzPlaceHolder="پایان"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      
+      
+      
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ از</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+            <nz-input-number formControlName="FromPrice" [nzMin]="0" [nzMax]="2000000000" [nzStep]="1000" style="width:200px"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      
+      
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ تا</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+            <nz-input-number formControlName="ToPrice" [nzMin]="0" [nzMax]="2000000000" [nzStep]="1000" style="width:200px"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+
+
+    </ng-container>
+  </nz-modal>
+</form>
