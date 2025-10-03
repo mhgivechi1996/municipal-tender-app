@@ -1,0 +1,1398 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Admin/GetList": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferSummariesQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferSummariesQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferSummariesQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjPageResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjPageResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjPageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/GetStatistics": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferStatisticsQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferStatisticsQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferStatisticsQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ObjOffersReportDictionaryObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ObjOffersReportDictionaryObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ObjOffersReportDictionaryObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/GetReport": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferReportQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferReportQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferReportQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersReportObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersReportObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersReportObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/GetDetails": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferDetailsQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferDetailsQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferDetailsQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/Get": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferDetailsQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferDetailsQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferDetailsQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/Add": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenderOfferCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenderOfferCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenderOfferCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/Update": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenderOfferCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenderOfferCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenderOfferCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Admin/Remove": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteTenderOfferCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteTenderOfferCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteTenderOfferCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/Authenticate": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjLoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjLoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contractor/GetListTenderOffers": {
+      "post": {
+        "tags": [
+          "Contractor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferSummariesQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferSummariesQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferSummariesQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjPageResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjPageResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjTenderOffersObjPageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contractor/GetTenderOfferStatistics": {
+      "post": {
+        "tags": [
+          "Contractor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferStatisticsQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferStatisticsQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTenderOfferStatisticsQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ObjOffersReportDictionaryObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ObjOffersReportDictionaryObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ObjOffersReportDictionaryObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contractor/GetListMyOffers": {
+      "post": {
+        "tags": [
+          "Contractor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetOfferListQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetOfferListQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetOfferListQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjPageResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjPageResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjPageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contractor/Get": {
+      "post": {
+        "tags": [
+          "Contractor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetOfferByIdQuery"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetOfferByIdQuery"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetOfferByIdQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contractor/Add": {
+      "post": {
+        "tags": [
+          "Contractor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOfferCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOfferCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOfferCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contractor/Update": {
+      "post": {
+        "tags": [
+          "Contractor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferUpdateCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferUpdateCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferUpdateCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjOffersObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contractor/Remove": {
+      "post": {
+        "tags": [
+          "Contractor"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferDeleteCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferDeleteCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferDeleteCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateOfferCommand": {
+        "type": "object",
+        "properties": {
+          "TenderOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "PriceOffer": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "UserId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTenderOfferCommand": {
+        "type": "object",
+        "properties": {
+          "Title": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "BeginDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "EndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "FromPrice": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ToPrice": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeleteTenderOfferCommand": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetOfferByIdQuery": {
+        "type": "object",
+        "properties": {
+          "OfferId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "UserId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetOfferListQuery": {
+        "type": "object",
+        "properties": {
+          "UserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "PageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "SortBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "SortIsAsc": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTenderOfferDetailsQuery": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTenderOfferReportQuery": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTenderOfferStatisticsQuery": {
+        "type": "object",
+        "properties": {
+          "TenderOfferIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTenderOfferSummariesQuery": {
+        "type": "object",
+        "properties": {
+          "IncludeExpired": {
+            "type": "boolean"
+          },
+          "PageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "SortBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "SortIsAsc": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Int32ObjOffersReportDictionaryObjResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "Result": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ObjOffersReport"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjLoginRequest": {
+        "type": "object",
+        "properties": {
+          "Username": {
+            "type": "string",
+            "nullable": true
+          },
+          "Password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjOfferParticipant": {
+        "type": "object",
+        "properties": {
+          "OfferId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "UserId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "Username": {
+            "type": "string",
+            "nullable": true
+          },
+          "PriceOffer": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjOffers": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TenderOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "UserId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "PriceOffer": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "TenderOffer": {
+            "$ref": "#/components/schemas/ObjTenderOffers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjOffersObjPageResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "Result": {
+            "$ref": "#/components/schemas/ObjOffersPage"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjOffersObjResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "Result": {
+            "$ref": "#/components/schemas/ObjOffers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjOffersPage": {
+        "type": "object",
+        "properties": {
+          "PageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PagesCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RecordsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjOffers"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjOffersReport": {
+        "type": "object",
+        "properties": {
+          "UsersCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "MinPriceOffer": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjOfferParticipant"
+            },
+            "nullable": true
+          },
+          "Winner": {
+            "$ref": "#/components/schemas/ObjOfferParticipant"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjOffersReportObjResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "Result": {
+            "$ref": "#/components/schemas/ObjOffersReport"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjTenderOffers": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Title": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "BeginDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "EndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "FromPrice": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ToPrice": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Report": {
+            "$ref": "#/components/schemas/ObjOffersReport"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjTenderOffersObjPageResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "Result": {
+            "$ref": "#/components/schemas/ObjTenderOffersPage"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjTenderOffersObjResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "Result": {
+            "$ref": "#/components/schemas/ObjTenderOffers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjTenderOffersPage": {
+        "type": "object",
+        "properties": {
+          "PageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "PagesCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RecordsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjTenderOffers"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferDeleteCommand": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "UserId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfferUpdateCommand": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "TenderOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "PriceOffer": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "UserId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatusCode": {
+        "enum": [
+          200,
+          400,
+          401,
+          404,
+          409,
+          500,
+          501,
+          503,
+          512
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "StringObjResponse": {
+        "type": "object",
+        "properties": {
+          "IsSuccess": {
+            "type": "boolean"
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "StatusCode": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "Result": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTenderOfferCommand": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Title": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "BeginDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "EndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "FromPrice": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ToPrice": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

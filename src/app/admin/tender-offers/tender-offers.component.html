@@ -1,14 +1,12 @@
-<p class="pageName">مدیریت مناقصه ها</p>
-
-<div class="actionBar">
-  <button
-    nz-button
-    class="login-form-button login-form-margin"
-    [nzType]="'primary'"
-    (click)="addRow()"
-  >
-    جدید
-  </button>
+<div class="page-header">
+  <h1 class="pageName">Municipal Tenders</h1>
+  <div class="actionBar">
+    <label class="include-expired-toggle">
+      <span>Show expired</span>
+      <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired($event)"></nz-switch>
+    </label>
+    <button nz-button nzType="primary" (click)="addRow()">Create Tender</button>
+  </div>
 </div>
 
 <nz-table
@@ -23,104 +21,152 @@
 >
   <thead>
     <tr>
-      <th>عملیات</th>
-      <th nzColumnKey="Id" [nzSortFn]="true">Id</th>
-      <th nzColumnKey="Title">عنوان</th>
-      <th nzColumnKey="Description">توضیحات</th>
-      <th nzColumnKey="BeginDate">شروع</th>
-      <th nzColumnKey="EndDate">پایان</th>
-      <th nzColumnKey="FromPrice">مبلغ از</th>
-      <th nzColumnKey="ToPrice">مبلغ تا</th>
-      <th nzColumnKey="MinPriceOffer">کمترین پیشنهاد</th>
-      <th nzColumnKey="UsersCount">تعداد شرکت کننده</th>
+      <th>Actions</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">ID</th>
+      <th nzColumnKey="Title">Title</th>
+      <th nzColumnKey="Description">Description</th>
+      <th nzColumnKey="BeginDate">Begin Date</th>
+      <th nzColumnKey="EndDate">End Date</th>
+      <th nzColumnKey="FromPrice">Min Price</th>
+      <th nzColumnKey="ToPrice">Max Price</th>
+      <th nzColumnKey="MinPriceOffer">Lowest Offer</th>
+      <th nzColumnKey="UsersCount">Participants</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of list">
-      <td>
+      <td class="actions">
+        <a (click)="editRow(data)">Edit</a>
+        <span nz-divider nzType="vertical"></span>
+        <a (click)="viewReport(data.Id)">Report</a>
+        <span nz-divider nzType="vertical"></span>
         <a
           nz-popconfirm
-          nzPopconfirmTitle="آیا از حذف مطمئن هستید?"
+          nzPopconfirmTitle="Remove this tender?"
           (nzOnConfirm)="deleteRow(data.Id)"
-          nzCancelText="انصراف"
-          nzOkText="تایید"
+          nzCancelText="Cancel"
+          nzOkText="Remove"
         >
-          حذف
+          Delete
         </a>
-        <a (click)="editRow(data)"> ویرایش </a>
       </td>
       <td>{{ data.Id }}</td>
       <td>{{ data.Title }}</td>
       <td>{{ data.Description }}</td>
-      <td>{{ data.BeginDate | date:"yyyy-MM-dd" }}</td>
-      <td>{{ data.EndDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.BeginDate | date: 'yyyy-MM-dd' }}</td>
+      <td>{{ data.EndDate | date: 'yyyy-MM-dd' }}</td>
       <td>{{ data.FromPrice | number }}</td>
-      <td>{{ data.ToPrice | number}}</td>
-      <td>{{ data.Report.MinPriceOffer | number}}</td>
-      <td>{{ data.Report.UsersCount | number}}</td>
+      <td>{{ data.ToPrice | number }}</td>
+      <td>{{ data.Report.MinPriceOffer | number }}</td>
+      <td>{{ data.Report.UsersCount | number }}</td>
     </tr>
   </tbody>
 </nz-table>
 
-<form nz-form [formGroup]="validateForm" >
+<form nz-form [formGroup]="validateForm">
   <nz-modal
     [(nzVisible)]="isEditModalVisible"
-    nzTitle="ثبت و ویرایش مناقصه"
-    nzOkText="ثبت"
-    nzCancelText="انصراف"
+    nzTitle="Tender"
+    nzOkText="Save"
+    nzCancelText="Cancel"
+    [nzOkLoading]="loading"
     (nzOnOk)="submitForm()"
     (nzOnCancel)="isEditModalVisible = false"
   >
     <ng-container *nzModalContent>
-     
-        <nz-form-item>
-            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>عنوان</nz-form-label>
-            <nz-form-control [nzSm]="16" [nzXs]="24">
-                <input type="text" nz-input formControlName="Title" placeholder="عنوان"/>
-            </nz-form-control>
-        </nz-form-item>
-
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24">توضیحات</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Title</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-            <textarea formControlName="Description" nz-input rows="2" placeholder=""></textarea>
-        </nz-form-control>
-      </nz-form-item>
-     
-      
-      
-      <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>شروع</nz-form-label>
-        <nz-form-control [nzSm]="16" [nzXs]="24">
-            <nz-date-picker formControlName="BeginDate" nzPlaceHolder="شروع"></nz-date-picker>
+          <input type="text" nz-input formControlName="Title" placeholder="Tender title" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>پایان</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Description</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-            <nz-date-picker formControlName="EndDate" nzPlaceHolder="پایان"></nz-date-picker>
-        </nz-form-control>
-      </nz-form-item>
-      
-      
-      
-      <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ از</nz-form-label>
-        <nz-form-control [nzSm]="16" [nzXs]="24">
-            <nz-input-number formControlName="FromPrice" [nzMin]="0" [nzMax]="2000000000" [nzStep]="1000" style="width:200px"></nz-input-number>
-        </nz-form-control>
-      </nz-form-item>
-      
-      
-      <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ تا</nz-form-label>
-        <nz-form-control [nzSm]="16" [nzXs]="24">
-            <nz-input-number formControlName="ToPrice" [nzMin]="0" [nzMax]="2000000000" [nzStep]="1000" style="width:200px"></nz-input-number>
+          <textarea formControlName="Description" nz-input rows="3" placeholder="Tender description"></textarea>
         </nz-form-control>
       </nz-form-item>
 
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Begin date</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-date-picker formControlName="BeginDate" nzPlaceHolder="Select date"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
 
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>End date</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-date-picker formControlName="EndDate" nzPlaceHolder="Select date"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Minimum price</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-input-number
+            formControlName="FromPrice"
+            [nzMin]="0"
+            [nzMax]="999999999"
+            [nzStep]="1000"
+            style="width: 200px"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Maximum price</nz-form-label>
+        <nz-form-control [nzSm]="16" [nzXs]="24">
+          <nz-input-number
+            formControlName="ToPrice"
+            [nzMin]="0"
+            [nzMax]="999999999"
+            [nzStep]="1000"
+            style="width: 200px"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
     </ng-container>
   </nz-modal>
 </form>
+
+<nz-modal
+  [(nzVisible)]="reportModalVisible"
+  nzTitle="Tender report"
+  nzOkText="Close"
+  [nzCancelText]="null"
+  (nzOnOk)="reportModalVisible = false"
+>
+  <ng-container *nzModalContent>
+    <ng-container *ngIf="report as currentReport; else loadingReport">
+      <div class="report-summary">
+        <p><strong>Participants:</strong> {{ currentReport.UsersCount ?? 0 }}</p>
+        <p><strong>Lowest offer:</strong> {{ currentReport.MinPriceOffer | number }}</p>
+        <p *ngIf="currentReport.Winner"><strong>Winner:</strong> {{ currentReport.Winner.Username || currentReport.Winner.UserId }} ({{ currentReport.Winner.PriceOffer | number }})</p>
+        <p *ngIf="!currentReport.Winner"><strong>Winner:</strong> Not determined yet</p>
+      </div>
+      <nz-table [nzData]="currentReport.Participants " nzSize="small">
+        <thead>
+          <tr>
+            <th>Offer ID</th>
+            <th>Contractor</th>
+            <th>Price</th>
+            <th>Submitted at</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let participant of currentReport.Participants">
+            <td>{{ participant.OfferId }}</td>
+            <td>{{ participant.Username || participant.UserId }}</td>
+            <td>{{ participant.PriceOffer | number }}</td>
+            <td>{{ participant.Date | date: 'yyyy-MM-dd HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-container>
+    <ng-template #loadingReport>
+      <div class="report-loading">Loading report...</div>
+    </ng-template>
+  </ng-container>
+</nz-modal>

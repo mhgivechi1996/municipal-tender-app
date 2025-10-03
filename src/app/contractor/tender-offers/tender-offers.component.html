@@ -1,7 +1,5 @@
-<p  class="pageName">لیست مناقصه های فعال</p>
-
-<div class="actionBar">
- 
+<div class="page-header">
+  <h1 class="pageName">Open Tenders</h1>
 </div>
 
 <nz-table
@@ -16,69 +14,67 @@
 >
   <thead>
     <tr>
-      <th>عملیات</th>
-      <th nzColumnKey="Id" [nzSortFn]="true">Id</th>
-      <th nzColumnKey="Title">عنوان</th>
-      <th nzColumnKey="Description">توضیحات</th>
-      <th nzColumnKey="BeginDate">شروع</th>
-      <th nzColumnKey="EndDate">پایان</th>
-      <th nzColumnKey="FromPrice">مبلغ از</th>
-      <th nzColumnKey="ToPrice">مبلغ تا</th>
-      <th nzColumnKey="MinPriceOffer">کمترین پیشنهاد</th>
-      <th nzColumnKey="UsersCount">تعداد شرکت کننده</th>
+      <th>Actions</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">ID</th>
+      <th nzColumnKey="Title">Title</th>
+      <th nzColumnKey="Description">Description</th>
+      <th nzColumnKey="BeginDate">Begin Date</th>
+      <th nzColumnKey="EndDate">End Date</th>
+      <th nzColumnKey="FromPrice">Min Price</th>
+      <th nzColumnKey="ToPrice">Max Price</th>
+      <th nzColumnKey="MinPriceOffer">Lowest Offer</th>
+      <th nzColumnKey="UsersCount">Participants</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of list">
-      <td>       
-        <a (click)="addRow(data)"> پیشنهاد </a>
+      <td class="actions">
+        <a (click)="openOfferModal(data)">Submit offer</a>
       </td>
       <td>{{ data.Id }}</td>
       <td>{{ data.Title }}</td>
       <td>{{ data.Description }}</td>
-      <td>{{ data.BeginDate | date:"yyyy-MM-dd" }}</td>
-      <td>{{ data.EndDate | date:"yyyy-MM-dd" }}</td>
+      <td>{{ data.BeginDate | date: 'yyyy-MM-dd' }}</td>
+      <td>{{ data.EndDate | date: 'yyyy-MM-dd' }}</td>
       <td>{{ data.FromPrice | number }}</td>
-      <td>{{ data.ToPrice | number}}</td>
-      <td>{{ data.Report.MinPriceOffer | number}}</td>
-      <td>{{ data.Report.UsersCount | number}}</td>
+      <td>{{ data.ToPrice | number }}</td>
+      <td>{{ data.Report.MinPriceOffer | number }}</td>
+      <td>{{ data.Report.UsersCount | number }}</td>
     </tr>
   </tbody>
 </nz-table>
 
-<form nz-form [formGroup]="validateForm" >
+<form nz-form [formGroup]="validateForm">
   <nz-modal
-    [(nzVisible)]="isEditModalVisible"
-    nzTitle="ثبت پیشنهاد قیمت برای مناقصه"
-    nzOkText="ثبت"
-    nzCancelText="انصراف"
-    (nzOnOk)="submitForm()"
-    (nzOnCancel)="isEditModalVisible = false"
+    [(nzVisible)]="isOfferModalVisible"
+    nzTitle="Submit your offer"
+    nzOkText="Send"
+    nzCancelText="Cancel"
+    (nzOnOk)="submitOffer()"
+    (nzOnCancel)="isOfferModalVisible = false"
   >
     <ng-container *nzModalContent>
-     
+      <ng-container *ngIf="selectedTender as tender">
+        <p class="modal-description">
+          {{ tender.Title }} � allowed price range:
+          {{ tender.FromPrice | number }} - {{ tender.ToPrice | number }}
+        </p>
         <nz-form-item>
-            <nz-form-label [nzSm]="8" [nzXs]="24">عنوان مناقصه</nz-form-label>
-            <nz-form-control [nzSm]="16" [nzXs]="24">
-                {{row.Title}}
-            </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24">بازه مبلغ مناقصه</nz-form-label>
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Your price</nz-form-label>
           <nz-form-control [nzSm]="16" [nzXs]="24">
-              از : {{row.FromPrice | number}} تا : {{row.ToPrice | number}}
+            <nz-input-number
+              formControlName="PriceOffer"
+              [nzMin]="tender.FromPrice"
+              [nzMax]="tender.ToPrice"
+              [nzStep]="1000"
+              style="width: 200px"
+            ></nz-input-number>
+            <div class="form-error" *ngIf="validateForm.get('PriceOffer')?.invalid && validateForm.get('PriceOffer')?.dirty">
+              Enter a price within the allowed range.
+            </div>
           </nz-form-control>
         </nz-form-item>
-
-    
-        <nz-form-item>
-            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ پیشنهادی</nz-form-label>
-            <nz-form-control [nzSm]="16" [nzXs]="24">
-                <nz-input-number formControlName="PriceOffer" [nzMin]="0" [nzMax]="2000000000" [nzStep]="1000" style="width:200px"></nz-input-number>
-            </nz-form-control>
-        </nz-form-item>
-      
+      </ng-container>
     </ng-container>
   </nz-modal>
 </form>

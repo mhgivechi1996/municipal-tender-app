@@ -1,4 +1,8 @@
+import { ObjOfferParticipant } from './ObjOfferParticipant';
+
 export class ObjOffersReport {
-    UsersCount: number = 0;
-    MinPriceOffer: number = 0;
+  UsersCount: number | null = null;
+  MinPriceOffer: number | null = null;
+  Participants: ObjOfferParticipant[] = [];
+  Winner: ObjOfferParticipant | null = null;
 }

@@ -1,112 +1,132 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, NonNullableFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { map } from 'rxjs/operators';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
-
-import { AuthService } from '../../services/AuthService';
+import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
 import { ContractorService } from '../../services/ContractorService';
-
-import { ObjTenderOffers } from '../../models/ObjTenderOffers';
 import { ObjOffers } from '../../models/ObjOffers';
+import { ObjTenderOffers } from '../../models/ObjTenderOffers';
+import { PageResponse } from '../../models/ApiResponses';
 
 @Component({
   selector: 'app-contractor-my-offers',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgZorroAntdModule
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule],
   templateUrl: './my-offers.component.html',
   styleUrl: './my-offers.component.css'
 })
 export class ContractorMyOffersComponent implements OnInit {
-  total = 1;
+  total = 0;
   list: ObjOffers[] = [];
-  loading = true;
+  loading = false;
   pageSize = 10;
   pageIndex = 1;
-  filter = [];
 
   isEditModalVisible = false;
-  row: ObjOffers = new ObjOffers();
-  validateForm: FormGroup<{
-    PriceOffer: FormControl<number>;
-  }> = this.fb.group({
-    PriceOffer: this.fb.control<number>(0)
+  selectedOffer: ObjOffers | null = null;
+  validateForm: FormGroup = this.fb.group({
+    PriceOffer: [null, [Validators.required, Validators.min(1)]]
   });
 
+  constructor(
+    private fb: FormBuilder,
+    private contractorService: ContractorService,
+    private message: NzMessageService
+  ) {}
 
+  ngOnInit(): void {
+    this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+  }
 
   loadDataFromServer(
     pageIndex: number,
     pageSize: number,
     sortField: string | null,
-    sortOrder: string | null,
-    filter: Array<{ key: string; value: string[] }>
+    sortOrder: string | null
   ): void {
     this.loading = true;
+    this.pageIndex = pageIndex;
+    this.pageSize = pageSize;
 
-    this.contractorService.GetListMyOffers(pageSize, pageIndex, sortField, sortOrder, filter).subscribe(
-      data => {
-        this.loading = false;
-        this.total = data.Result.RecordsCount; // mock the total data here
-        this.list = data.Result.Records;
+    this.contractorService
+      .getMyOffers(pageSize, pageIndex, sortField, sortOrder)
+      .subscribe({
+        next: (resp: PageResponse<ObjOffers>) => {
+          this.loading = false;
+          if (resp.IsSuccess && resp.Result) {
+            this.total = resp.Result.RecordsCount;
+            this.list = resp.Result.Records;
+          } else {
+            this.total = 0;
+            this.list = [];
+          }
+        },
+        error: () => {
+          this.loading = false;
+          this.total = 0;
+          this.list = [];
+        }
       });
-
-
   }
-
 
   onQueryParamsChange(params: NzTableQueryParams): void {
-    //console.log(params);
-    const { pageSize, pageIndex, sort, filter } = params;
-    const currentSort = sort.find(item => item.value !== null);
-    const sortField = (currentSort && currentSort.key) || null;
-    const sortOrder = (currentSort && currentSort.value) || null;
-    this.loadDataFromServer(pageIndex, pageSize, sortField, sortOrder, filter);
+    const { pageSize, pageIndex, sort } = params;
+    const currentSort = sort.find((item) => item.value !== null);
+    const sortField = currentSort?.key ?? null;
+    const sortOrder = currentSort?.value ?? null;
+    this.loadDataFromServer(pageIndex, pageSize, sortField, sortOrder);
   }
 
-
-  editRow(data: ObjOffers): void {
-    this.row = data;
+  editRow(offer: ObjOffers): void {
+    this.selectedOffer = offer;
+    const tender: ObjTenderOffers | null = offer.TenderOffer;
+    const priceControl = this.validateForm.get('PriceOffer');
+    priceControl?.setValidators([
+      Validators.required,
+      Validators.min(tender?.FromPrice ?? 1),
+      Validators.max(tender?.ToPrice ?? Number.MAX_SAFE_INTEGER)
+    ]);
+    priceControl?.reset(offer.PriceOffer ?? tender?.FromPrice ?? null);
+    priceControl?.markAsPristine();
+    priceControl?.updateValueAndValidity({ emitEvent: false });
     this.isEditModalVisible = true;
-
-    this.validateForm.controls.PriceOffer.setValue(this.row.PriceOffer);
   }
 
   submitForm(): void {
-
-    // stop here if form is invalid
-    if (this.validateForm.invalid) {
+    if (!this.selectedOffer) {
       return;
     }
 
-    this.row.PriceOffer = this.validateForm.controls.PriceOffer.value;
+    if (this.validateForm.invalid) {
+      this.validateForm.markAllAsTouched();
+      return;
+    }
 
-    this.contractorService.Update(this.row);
+    const price = this.validateForm.get('PriceOffer')?.value as number;
+    if (price == null) {
+      this.message.error('Please enter your price offer.');
+      return;
+    }
 
-    this.isEditModalVisible = false;
-
+    this.contractorService.updateOffer(this.selectedOffer.Id, price).subscribe({
+      next: (resp) => {
+        if (resp?.IsSuccess) {
+          this.isEditModalVisible = false;
+          this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+        }
+      }
+    });
   }
 
   deleteRow(id: number): void {
-    this.contractorService.Remove(id);
-    this.loadDataFromServer(this.pageIndex, this.pageSize, null, null, []);
-  }
-
-
-
-  constructor(
-    private fb: NonNullableFormBuilder,
-    private contractorService: ContractorService) { }
-
-  ngOnInit(): void {
-    //this.loadDataFromServer(this.pageIndex, this.pageSize, null, null, []);
+    this.contractorService.deleteOffer(id).subscribe({
+      next: (resp) => {
+        if (resp?.IsSuccess) {
+          this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+        }
+      }
+    });
   }
 }
