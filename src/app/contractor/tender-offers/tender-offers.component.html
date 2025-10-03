@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1 class="pageName">Open Tenders</h1>
+  <h1 class="pageName">مناقصه های باز</h1>
 </div>
 
 <nz-table
@@ -14,16 +14,16 @@
 >
   <thead>
     <tr>
-      <th>Actions</th>
-      <th nzColumnKey="Id" [nzSortFn]="true">ID</th>
-      <th nzColumnKey="Title">Title</th>
-      <th nzColumnKey="Description">Description</th>
-      <th nzColumnKey="BeginDate">Begin Date</th>
-      <th nzColumnKey="EndDate">End Date</th>
-      <th nzColumnKey="FromPrice">Min Price</th>
-      <th nzColumnKey="ToPrice">Max Price</th>
-      <th nzColumnKey="MinPriceOffer">Lowest Offer</th>
-      <th nzColumnKey="UsersCount">Participants</th>
+      <th>عملیات</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">شناسه</th>
+      <th nzColumnKey="Title">عنوان</th>
+      <th nzColumnKey="Description">توضیحات</th>
+      <th nzColumnKey="BeginDate">تاریخ شروع</th>
+      <th nzColumnKey="EndDate">تاریخ پایان</th>
+      <th nzColumnKey="FromPrice">حداقل قیمت</th>
+      <th nzColumnKey="ToPrice">حداکثر قیمت</th>
+      <th nzColumnKey="MinPriceOffer">کمترین پیشنهاد</th>
+      <th nzColumnKey="UsersCount">تعداد شرکت کنندگان</th>
     </tr>
   </thead>
   <tbody>
@@ -52,11 +52,12 @@
     nzCancelText="Cancel"
     (nzOnOk)="submitOffer()"
     (nzOnCancel)="isOfferModalVisible = false"
+    nzDirection="rtl"
   >
     <ng-container *nzModalContent>
       <ng-container *ngIf="selectedTender as tender">
         <p class="modal-description">
-          {{ tender.Title }} � allowed price range:
+          {{ tender.Title }} بازه مجاز قیمت:
           {{ tender.FromPrice | number }} - {{ tender.ToPrice | number }}
         </p>
         <nz-form-item>
@@ -70,7 +71,7 @@
               style="width: 200px"
             ></nz-input-number>
             <div class="form-error" *ngIf="validateForm.get('PriceOffer')?.invalid && validateForm.get('PriceOffer')?.dirty">
-              Enter a price within the allowed range.
+              مبلغ را در بازه ی مجاز ثبت کنید.
             </div>
           </nz-form-control>
         </nz-form-item>

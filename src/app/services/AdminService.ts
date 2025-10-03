@@ -40,6 +40,7 @@ export class AdminService {
     sortOrder?: string | null,
     includeExpired: boolean = true
   ): Observable<PageResponse<ObjTenderOffers>> {
+    console.log(includeExpired)
     const body = {
       IncludeExpired: includeExpired,
       PageSize: pageSize,

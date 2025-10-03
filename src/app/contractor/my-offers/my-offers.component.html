@@ -1,47 +1,26 @@
 <div class="page-header">
-  <h1 class="pageName">My Offers</h1>
+  <h1 class="pageName">پیشنهادات من</h1>
 </div>
 
-<nz-table
-  nzShowSizeChanger
-  [nzData]="list"
-  [nzFrontPagination]="false"
-  [nzLoading]="loading"
-  [nzTotal]="total"
-  [nzPageSize]="pageSize"
-  [nzPageIndex]="pageIndex"
-  (nzQueryParams)="onQueryParamsChange($event)"
->
+<nz-table nzShowSizeChanger [nzData]="list" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="total"
+  [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
-      <th>Actions</th>
-      <th nzColumnKey="Id" [nzSortFn]="true">Offer ID</th>
-      <th nzColumnKey="Title">Tender</th>
-      <th nzColumnKey="BeginDate">Begin Date</th>
-      <th nzColumnKey="EndDate">End Date</th>
-      <th nzColumnKey="FromPrice">Min Price</th>
-      <th nzColumnKey="ToPrice">Max Price</th>
-      <th nzColumnKey="MinPriceOffer">Lowest Offer</th>
-      <th nzColumnKey="UsersCount">Participants</th>
-      <th nzColumnKey="PriceOffer">My Price</th>
-      <th nzColumnKey="Date">Submitted</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">شناسه</th>
+      <th nzColumnKey="Title">عنوان</th>
+      <th nzColumnKey="BeginDate">تاریخ شروع</th>
+      <th nzColumnKey="EndDate">تاریخ پایان</th>
+      <th nzColumnKey="FromPrice">حداقل قیمت</th>
+      <th nzColumnKey="ToPrice">حداکثر قیمت</th>
+      <th nzColumnKey="MinPriceOffer">پایین ترین پیشنهاد</th>
+      <th nzColumnKey="UsersCount">تعداد شرکت کنندگان</th>
+      <th nzColumnKey="PriceOffer">مبلغ پیشنهادی من</th>
+      <th nzColumnKey="Date">تاریخ پیشنهاد من</th>
+      <th>عملیات</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of list">
-      <td class="actions">
-        <a (click)="editRow(data)">Edit</a>
-        <span nz-divider nzType="vertical"></span>
-        <a
-          nz-popconfirm
-          nzPopconfirmTitle="Remove this offer?"
-          (nzOnConfirm)="deleteRow(data.Id)"
-          nzCancelText="Cancel"
-          nzOkText="Remove"
-        >
-          Delete
-        </a>
-      </td>
       <td>{{ data.Id }}</td>
       <td>{{ data.TenderOffer?.Title }}</td>
       <td>{{ data.TenderOffer?.BeginDate | date: 'yyyy-MM-dd' }}</td>
@@ -52,37 +31,35 @@
       <td>{{ data.TenderOffer?.Report?.UsersCount | number }}</td>
       <td>{{ data.PriceOffer | number }}</td>
       <td>{{ data.Date | date: 'yyyy-MM-dd HH:mm' }}</td>
+      <td class="actions">
+        <a (click)="editRow(data)">ویرایش پیشنهاد</a>
+        <span nz-divider nzType="vertical"></span>
+        <a nz-popconfirm nzPopconfirmTitle="از حذف پیشنهاد مطمئن هستید؟" (nzOnConfirm)="deleteRow(data.Id)"
+          nzCancelText="لغو" nzOkText="حذف">
+          حذف پیشنهاد
+        </a>
+      </td>
     </tr>
   </tbody>
 </nz-table>
 
 <form nz-form [formGroup]="validateForm">
-  <nz-modal
-    [(nzVisible)]="isEditModalVisible"
-    nzTitle="Update offer"
-    nzOkText="Save"
-    nzCancelText="Cancel"
-    (nzOnOk)="submitForm()"
-    (nzOnCancel)="isEditModalVisible = false"
-  >
+  <nz-modal [(nzVisible)]="isEditModalVisible" nzTitle="ویرایش پیشنهاد" nzOkText="ذخیره" nzCancelText="لغو"
+    (nzOnOk)="submitForm()" (nzOnCancel)="isEditModalVisible = false" nzDirection="rtl">
     <ng-container *nzModalContent>
       <ng-container *ngIf="selectedOffer as offer">
         <p class="modal-description">
-          {{ offer.TenderOffer?.Title }} � allowed price range:
+          {{ offer.TenderOffer?.Title }} بازه ی مجاز مبلغ:
           {{ offer.TenderOffer?.FromPrice | number }} - {{ offer.TenderOffer?.ToPrice | number }}
         </p>
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Your price</nz-form-label>
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ پیشنهادی من</nz-form-label>
           <nz-form-control [nzSm]="16" [nzXs]="24">
-            <nz-input-number
-              formControlName="PriceOffer"
-              [nzMin]="offer.TenderOffer?.FromPrice ?? 0"
-              [nzMax]="offer.TenderOffer?.ToPrice ?? 999999999"
-              [nzStep]="1000"
-              style="width: 200px"
-            ></nz-input-number>
-            <div class="form-error" *ngIf="validateForm.get('PriceOffer')?.invalid && validateForm.get('PriceOffer')?.dirty">
-              Enter a price within the allowed range.
+            <nz-input-number formControlName="PriceOffer" [nzMin]="offer.TenderOffer?.FromPrice ?? 0"
+              [nzMax]="offer.TenderOffer?.ToPrice ?? 999999999" [nzStep]="1000" style="width: 200px"></nz-input-number>
+            <div class="form-error"
+              *ngIf="validateForm.get('PriceOffer')?.invalid && validateForm.get('PriceOffer')?.dirty">
+              مبلغ پیشنهادی باید در بازه ی مجاز باشد.
             </div>
           </nz-form-control>
         </nz-form-item>

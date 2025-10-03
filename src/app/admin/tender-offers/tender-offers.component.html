@@ -3,25 +3,16 @@
   <div class="actionBar">
     <label class="include-expired-toggle">
       <span>نمایش مناقصه‌های منقضی</span>
-      <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired()"></nz-switch>
+      <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired($event)"></nz-switch>
     </label>
     <button nz-button nzType="primary" (click)="addRow()">ثبت مناقصه جدید</button>
   </div>
 </div>
 
-<nz-table
-  nzShowSizeChanger
-  [nzData]="list"
-  [nzFrontPagination]="false"
-  [nzLoading]="loading"
-  [nzTotal]="total"
-  [nzPageSize]="pageSize"
-  [nzPageIndex]="pageIndex"
-  (nzQueryParams)="onQueryParamsChange()"
->
+<nz-table nzShowSizeChanger [nzData]="list" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="total"
+  [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
-      <th>اقدامات</th>
       <th nzColumnKey="Id" [nzSortFn]="true">شناسه</th>
       <th nzColumnKey="Title">عنوان</th>
       <th nzColumnKey="Description">توضیحات</th>
@@ -31,25 +22,11 @@
       <th nzColumnKey="ToPrice">حداکثر قیمت</th>
       <th nzColumnKey="MinPriceOffer">کمترین قیمت پیشنهادی</th>
       <th nzColumnKey="UsersCount">تعداد شرکت‌کنندگان</th>
+      <th>عملیات</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of list">
-      <td class="actions">
-        <button nz-button nzType="link" (click)="editRow(data)">ویرایش</button>
-        <button nz-button nzType="link" (click)="openReport(data.Id)">گزارش</button>
-        <button
-          nz-button
-          nzType="link"
-          nz-popconfirm
-          nzPopconfirmTitle="آیا از حذف این مناقصه مطمئن هستید؟"
-          (nzOnConfirm)="deleteRow(data.Id)"
-          nzCancelText="انصراف"
-          nzOkText="حذف"
-        >
-          حذف
-        </button>
-      </td>
       <td>{{ data.Id }}</td>
       <td>{{ data.Title }}</td>
       <td>{{ data.Description }}</td>
@@ -59,20 +36,21 @@
       <td>{{ data.ToPrice | number }}</td>
       <td>{{ data.Report.MinPriceOffer | number }}</td>
       <td>{{ data.Report.UsersCount | number }}</td>
+      <td class="actions">
+        <button nz-button nzType="link" (click)="editRow(data)">ویرایش</button>
+        <button nz-button nzType="link" (click)="openReport(data.Id)">گزارش</button>
+        <button nz-button nzType="link" nz-popconfirm nzPopconfirmTitle="آیا از حذف این مناقصه مطمئن هستید؟"
+          (nzOnConfirm)="deleteRow(data.Id)" nzCancelText="انصراف" nzOkText="حذف">
+          حذف
+        </button>
+      </td>
     </tr>
   </tbody>
 </nz-table>
 
 <form nz-form [formGroup]="validateForm">
-  <nz-modal
-    [(nzVisible)]="isEditModalVisible"
-    nzTitle="مناقصه"
-    nzOkText="ذخیره"
-    nzCancelText="انصراف"
-    [nzOkLoading]="loading"
-    (nzOnOk)="submitForm()"
-    (nzOnCancel)="isEditModalVisible = false"
-  >
+  <nz-modal [(nzVisible)]="isEditModalVisible" nzTitle="مناقصه" nzOkText="ذخیره" nzCancelText="انصراف"
+    [nzOkLoading]="loading" (nzOnOk)="submitForm()" (nzOnCancel)="isEditModalVisible = false" nzDirection="rtl">
     <ng-container *nzModalContent>
       <nz-form-item>
         <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>عنوان</nz-form-label>
@@ -105,26 +83,16 @@
       <nz-form-item>
         <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>حداقل قیمت</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-          <nz-input-number
-            formControlName="FromPrice"
-            [nzMin]="0"
-            [nzMax]="999999999"
-            [nzStep]="1000"
-            style="width: 200px"
-          ></nz-input-number>
+          <nz-input-number formControlName="FromPrice" [nzMin]="0" [nzMax]="999999999" [nzStep]="1000"
+            style="width: 200px"></nz-input-number>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
         <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>حداکثر قیمت</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-          <nz-input-number
-            formControlName="ToPrice"
-            [nzMin]="0"
-            [nzMax]="999999999"
-            [nzStep]="1000"
-            style="width: 200px"
-          ></nz-input-number>
+          <nz-input-number formControlName="ToPrice" [nzMin]="0" [nzMax]="999999999" [nzStep]="1000"
+            style="width: 200px"></nz-input-number>
         </nz-form-control>
       </nz-form-item>
     </ng-container>
