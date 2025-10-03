@@ -1,11 +1,11 @@
-<div class="page-header">
-  <h1 class="pageName">Municipal Tenders</h1>
+﻿<div class="page-header">
+  <h1 class="pageName">مناقصه‌های شهرداری</h1>
   <div class="actionBar">
     <label class="include-expired-toggle">
-      <span>Show expired</span>
-      <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired($event)"></nz-switch>
+      <span>نمایش مناقصه‌های منقضی</span>
+      <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired()"></nz-switch>
     </label>
-    <button nz-button nzType="primary" (click)="addRow()">Create Tender</button>
+    <button nz-button nzType="primary" (click)="addRow()">ثبت مناقصه جدید</button>
   </div>
 </div>
 
@@ -17,37 +17,37 @@
   [nzTotal]="total"
   [nzPageSize]="pageSize"
   [nzPageIndex]="pageIndex"
-  (nzQueryParams)="onQueryParamsChange($event)"
+  (nzQueryParams)="onQueryParamsChange()"
 >
   <thead>
     <tr>
-      <th>Actions</th>
-      <th nzColumnKey="Id" [nzSortFn]="true">ID</th>
-      <th nzColumnKey="Title">Title</th>
-      <th nzColumnKey="Description">Description</th>
-      <th nzColumnKey="BeginDate">Begin Date</th>
-      <th nzColumnKey="EndDate">End Date</th>
-      <th nzColumnKey="FromPrice">Min Price</th>
-      <th nzColumnKey="ToPrice">Max Price</th>
-      <th nzColumnKey="MinPriceOffer">Lowest Offer</th>
-      <th nzColumnKey="UsersCount">Participants</th>
+      <th>اقدامات</th>
+      <th nzColumnKey="Id" [nzSortFn]="true">شناسه</th>
+      <th nzColumnKey="Title">عنوان</th>
+      <th nzColumnKey="Description">توضیحات</th>
+      <th nzColumnKey="BeginDate">تاریخ شروع</th>
+      <th nzColumnKey="EndDate">تاریخ پایان</th>
+      <th nzColumnKey="FromPrice">حداقل قیمت</th>
+      <th nzColumnKey="ToPrice">حداکثر قیمت</th>
+      <th nzColumnKey="MinPriceOffer">کمترین قیمت پیشنهادی</th>
+      <th nzColumnKey="UsersCount">تعداد شرکت‌کنندگان</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of list">
       <td class="actions">
-        <button nz-button nzType="link" (click)="editRow(data)">Edit tender</button>
-        <button nz-button nzType="link" (click)="openReport(data.Id)">View report</button>
+        <button nz-button nzType="link" (click)="editRow(data)">ویرایش</button>
+        <button nz-button nzType="link" (click)="openReport(data.Id)">گزارش</button>
         <button
           nz-button
           nzType="link"
           nz-popconfirm
-          nzPopconfirmTitle="Remove this tender?"
+          nzPopconfirmTitle="آیا از حذف این مناقصه مطمئن هستید؟"
           (nzOnConfirm)="deleteRow(data.Id)"
-          nzCancelText="Cancel"
-          nzOkText="Remove"
+          nzCancelText="انصراف"
+          nzOkText="حذف"
         >
-          Delete
+          حذف
         </button>
       </td>
       <td>{{ data.Id }}</td>
@@ -66,44 +66,44 @@
 <form nz-form [formGroup]="validateForm">
   <nz-modal
     [(nzVisible)]="isEditModalVisible"
-    nzTitle="Tender"
-    nzOkText="Save"
-    nzCancelText="Cancel"
+    nzTitle="مناقصه"
+    nzOkText="ذخیره"
+    nzCancelText="انصراف"
     [nzOkLoading]="loading"
     (nzOnOk)="submitForm()"
     (nzOnCancel)="isEditModalVisible = false"
   >
     <ng-container *nzModalContent>
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Title</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>عنوان</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-          <input type="text" nz-input formControlName="Title" placeholder="Tender title" />
+          <input type="text" nz-input formControlName="Title" placeholder="عنوان مناقصه" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Description</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>توضیحات</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-          <textarea formControlName="Description" nz-input rows="3" placeholder="Tender description"></textarea>
+          <textarea formControlName="Description" nz-input rows="3" placeholder="توضیحات مناقصه"></textarea>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Begin date</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>تاریخ شروع</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-          <nz-date-picker formControlName="BeginDate" nzPlaceHolder="Select date"></nz-date-picker>
+          <nz-date-picker formControlName="BeginDate" nzPlaceHolder="انتخاب تاریخ"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>End date</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>تاریخ پایان</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
-          <nz-date-picker formControlName="EndDate" nzPlaceHolder="Select date"></nz-date-picker>
+          <nz-date-picker formControlName="EndDate" nzPlaceHolder="انتخاب تاریخ"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Minimum price</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>حداقل قیمت</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
           <nz-input-number
             formControlName="FromPrice"
@@ -116,7 +116,7 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Maximum price</nz-form-label>
+        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>حداکثر قیمت</nz-form-label>
         <nz-form-control [nzSm]="16" [nzXs]="24">
           <nz-input-number
             formControlName="ToPrice"

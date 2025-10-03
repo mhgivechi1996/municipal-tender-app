@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -104,7 +104,7 @@ export class ContractorTenderOffersComponent implements OnInit {
 
     const price = this.validateForm.get('PriceOffer')?.value as number;
     if (price == null) {
-      this.message.error('Please enter your price offer.');
+      this.message.error('لطفاً مبلغ پیشنهادی را وارد کنید.');
       return;
     }
 
@@ -118,3 +118,4 @@ export class ContractorTenderOffersComponent implements OnInit {
     });
   }
 }
+

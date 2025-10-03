@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -109,7 +109,7 @@ export class AdminTenderReportComponent implements OnInit {
           this.report = resp.Result;
         } else {
           this.report = null;
-          this.message.error(resp.Message || 'Unable to load report');
+          this.message.error(resp.Message || 'امکان بارگذاری گزارش وجود ندارد.');
         }
       },
       error: () => {
@@ -136,3 +136,4 @@ export class AdminTenderReportComponent implements OnInit {
     }
   }
 }
+

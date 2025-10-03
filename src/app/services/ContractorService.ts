@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -53,7 +53,7 @@ export class ContractorService {
         map((resp) => this.mapTenderOfferPageResponse(resp)),
         tap((resp) => {
           if (!resp.IsSuccess) {
-            this.message.error(resp.Message || 'Failed to load tenders');
+            this.message.error(resp.Message || 'دریافت فهرست مناقصه‌ها ناموفق بود');
           }
         }),
         catchError((error) => this.handleError(error))
@@ -81,7 +81,7 @@ export class ContractorService {
         map((resp) => this.mapOfferPageResponse(resp)),
         tap((resp) => {
           if (!resp.IsSuccess) {
-            this.message.error(resp.Message || 'Failed to load offers');
+            this.message.error(resp.Message || 'دریافت فهرست پیشنهادها ناموفق بود');
           }
         }),
         catchError((error) => this.handleError(error))
@@ -99,7 +99,7 @@ export class ContractorService {
         headers: this.getHeaders()
       })
       .pipe(
-        tap((resp) => this.showToast(resp, 'Offer submitted successfully.')),
+        tap((resp) => this.showToast(resp, 'پیشنهاد با موفقیت ثبت شد.')),
         catchError((error) => this.handleError(error))
       );
   }
@@ -115,7 +115,7 @@ export class ContractorService {
         headers: this.getHeaders()
       })
       .pipe(
-        tap((resp) => this.showToast(resp, 'Offer updated successfully.')),
+        tap((resp) => this.showToast(resp, 'پیشنهاد با موفقیت ویرایش شد.')),
         catchError((error) => this.handleError(error))
       );
   }
@@ -126,7 +126,7 @@ export class ContractorService {
         headers: this.getHeaders()
       })
       .pipe(
-        tap((resp) => this.showToast(resp, 'Offer removed successfully.')),
+        tap((resp) => this.showToast(resp, 'پیشنهاد با موفقیت ثبت شد.')),
         catchError((error) => this.handleError(error))
       );
   }
@@ -225,12 +225,20 @@ export class ContractorService {
     if (resp.IsSuccess) {
       this.message.success(resp.Message || fallback);
     } else {
-      this.message.error(resp.Message || 'Operation failed.');
+      this.message.error(resp.Message || 'پیشنهاد با موفقیت حذف شد.');
     }
   }
 
   private handleError(error: any) {
-    this.message.error('Unexpected error while communicating with the server.');
+    this.message.error('خطای غیرمنتظره در ارتباط با سرور رخ داد.');
     return throwError(() => error);
   }
 }
+
+
+
+
+
+
+
+

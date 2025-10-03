@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -56,7 +56,7 @@ export class AdminService {
         map((resp) => this.mapTenderOfferPageResponse(resp)),
         tap((resp) => {
           if (!resp.IsSuccess) {
-            this.message.error(resp.Message || 'Failed to load tenders');
+            this.message.error(resp.Message || 'دریافت فهرست مناقصه‌ها ناموفق بود');
           }
         }),
         catchError((error) => this.handleError(error))
@@ -78,7 +78,7 @@ export class AdminService {
         headers: this.getHeaders()
       })
       .pipe(
-        tap((resp) => this.showToast(resp, 'Tender created successfully.')),
+        tap((resp) => this.showToast(resp, 'مناقصه با موفقیت ثبت شد.')),
         catchError((error) => this.handleError(error))
       );
   }
@@ -99,7 +99,7 @@ export class AdminService {
         headers: this.getHeaders()
       })
       .pipe(
-        tap((resp) => this.showToast(resp, 'Tender updated successfully.')),
+        tap((resp) => this.showToast(resp, 'مناقصه با موفقیت ویرایش شد.')),
         catchError((error) => this.handleError(error))
       );
   }
@@ -110,7 +110,7 @@ export class AdminService {
         headers: this.getHeaders()
       })
       .pipe(
-        tap((resp) => this.showToast(resp, 'Tender removed successfully.')),
+        tap((resp) => this.showToast(resp, 'مناقصه با موفقیت ثبت شد.')),
         catchError((error) => this.handleError(error))
       );
   }
@@ -127,7 +127,7 @@ export class AdminService {
         })),
         tap((resp) => {
           if (!resp.IsSuccess) {
-            this.message.error(resp.Message || 'Failed to load tender report');
+            this.message.error(resp.Message || 'دریافت فهرست مناقصه‌ها ناموفق بود');
           }
         }),
         catchError((error) => this.handleError(error))
@@ -204,12 +204,14 @@ export class AdminService {
     if (resp.IsSuccess) {
       this.message.success(resp.Message || fallback);
     } else {
-      this.message.error(resp.Message || 'Operation failed.');
+      this.message.error(resp.Message || 'مناقصه با موفقیت حذف شد.');
     }
   }
 
   private handleError(error: any) {
-    this.message.error('Unexpected error while communicating with the server.');
+    this.message.error('خطای غیرمنتظره در ارتباط با سرور رخ داد.');
     return throwError(() => error);
   }
 }
+
+

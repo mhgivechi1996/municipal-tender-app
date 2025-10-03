@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -131,17 +131,17 @@ export class AdminTenderOffersComponent implements OnInit {
     const toPrice = formValue['ToPrice'] as number | null;
 
     if (!beginDate || !endDate) {
-      this.message.error('Please specify both begin and end dates.');
+      this.message.error('لطفاً تاریخ شروع و پایان را مشخص کنید.');
       return;
     }
 
     if (endDate < beginDate) {
-      this.message.error('End date must be after the begin date.');
+      this.message.error('تاریخ پایان باید بعد از تاریخ شروع باشد.');
       return;
     }
 
     if ((fromPrice ?? 0) > (toPrice ?? 0)) {
-      this.message.error('Maximum price must be greater than or equal to minimum price.');
+      this.message.error('حداکثر قیمت باید از حداقل قیمت بزرگ‌تر یا برابر باشد.');
       return;
     }
 
@@ -182,3 +182,5 @@ export class AdminTenderOffersComponent implements OnInit {
     });
   }
 }
+
+
