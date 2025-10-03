@@ -36,11 +36,11 @@
   <tbody>
     <tr *ngFor="let data of list">
       <td class="actions">
-        <a (click)="editRow(data)">Edit</a>
-        <span nz-divider nzType="vertical"></span>
-        <a (click)="viewReport(data.Id)">Report</a>
-        <span nz-divider nzType="vertical"></span>
-        <a
+        <button nz-button nzType="link" (click)="editRow(data)">Edit tender</button>
+        <button nz-button nzType="link" (click)="openReport(data.Id)">View report</button>
+        <button
+          nz-button
+          nzType="link"
           nz-popconfirm
           nzPopconfirmTitle="Remove this tender?"
           (nzOnConfirm)="deleteRow(data.Id)"
@@ -48,7 +48,7 @@
           nzOkText="Remove"
         >
           Delete
-        </a>
+        </button>
       </td>
       <td>{{ data.Id }}</td>
       <td>{{ data.Title }}</td>
@@ -130,43 +130,3 @@
     </ng-container>
   </nz-modal>
 </form>
-
-<nz-modal
-  [(nzVisible)]="reportModalVisible"
-  nzTitle="Tender report"
-  nzOkText="Close"
-  [nzCancelText]="null"
-  (nzOnOk)="reportModalVisible = false"
->
-  <ng-container *nzModalContent>
-    <ng-container *ngIf="report as currentReport; else loadingReport">
-      <div class="report-summary">
-        <p><strong>Participants:</strong> {{ currentReport.UsersCount ?? 0 }}</p>
-        <p><strong>Lowest offer:</strong> {{ currentReport.MinPriceOffer | number }}</p>
-        <p *ngIf="currentReport.Winner"><strong>Winner:</strong> {{ currentReport.Winner.Username || currentReport.Winner.UserId }} ({{ currentReport.Winner.PriceOffer | number }})</p>
-        <p *ngIf="!currentReport.Winner"><strong>Winner:</strong> Not determined yet</p>
-      </div>
-      <nz-table [nzData]="currentReport.Participants " nzSize="small">
-        <thead>
-          <tr>
-            <th>Offer ID</th>
-            <th>Contractor</th>
-            <th>Price</th>
-            <th>Submitted at</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let participant of currentReport.Participants">
-            <td>{{ participant.OfferId }}</td>
-            <td>{{ participant.Username || participant.UserId }}</td>
-            <td>{{ participant.PriceOffer | number }}</td>
-            <td>{{ participant.Date | date: 'yyyy-MM-dd HH:mm' }}</td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </ng-container>
-    <ng-template #loadingReport>
-      <div class="report-loading">Loading report...</div>
-    </ng-template>
-  </ng-container>
-</nz-modal>

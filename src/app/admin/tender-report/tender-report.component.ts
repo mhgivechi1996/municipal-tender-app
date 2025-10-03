@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -42,11 +43,13 @@ export class AdminTenderReportComponent implements OnInit {
   report: ObjOffersReport | null = null;
   loadingTenders = false;
   loadingReport = false;
+  private requestedTenderId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private adminService: AdminService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private route: ActivatedRoute
   ) {
     this.filterForm = this.fb.group({
       TenderId: [null, Validators.required]
@@ -54,6 +57,12 @@ export class AdminTenderReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe((params) => {
+      const tenderId = Number(params.get('tenderId'));
+      this.requestedTenderId = Number.isFinite(tenderId) && tenderId > 0 ? tenderId : null;
+      this.tryApplyRequestedTender();
+    });
+
     this.loadTenders();
   }
 
@@ -64,7 +73,8 @@ export class AdminTenderReportComponent implements OnInit {
         this.loadingTenders = false;
         if (resp.IsSuccess && resp.Result) {
           this.tenders = resp.Result.Records;
-          if (this.tenders.length && !this.filterForm.get('TenderId')?.value) {
+          this.tryApplyRequestedTender();
+          if (!this.filterForm.get('TenderId')?.value && this.tenders.length) {
             this.filterForm.patchValue({ TenderId: this.tenders[0].Id });
             this.loadReport();
           }
@@ -111,5 +121,18 @@ export class AdminTenderReportComponent implements OnInit {
 
   get participants(): ObjOfferParticipant[] {
     return this.report?.Participants ?? [];
+  }
+
+  private tryApplyRequestedTender(): void {
+    if (!this.requestedTenderId || !this.tenders.length) {
+      return;
+    }
+
+    const match = this.tenders.find((t) => t.Id === this.requestedTenderId);
+    if (match) {
+      this.filterForm.patchValue({ TenderId: match.Id });
+      this.requestedTenderId = null;
+      this.loadReport();
+    }
   }
 }

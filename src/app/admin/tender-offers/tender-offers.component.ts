@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
 import { AdminService } from '../../services/AdminService';
 import { ObjTenderOffers } from '../../models/ObjTenderOffers';
-import { ObjOffersReport } from '../../models/ObjOffersReport';
 import { PageResponse } from '../../models/ApiResponses';
 
 @Component({
@@ -26,8 +26,6 @@ export class AdminTenderOffersComponent implements OnInit {
   includeExpired = true;
 
   isEditModalVisible = false;
-  reportModalVisible = false;
-  report: ObjOffersReport | null = null;
 
   row: ObjTenderOffers = new ObjTenderOffers();
   validateForm: FormGroup = this.fb.group({
@@ -42,7 +40,8 @@ export class AdminTenderOffersComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private adminService: AdminService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -177,20 +176,9 @@ export class AdminTenderOffersComponent implements OnInit {
     });
   }
 
-  viewReport(tenderId: number): void {
-    this.report = null;
-    this.reportModalVisible = true;
-    this.adminService.getTenderReport(tenderId).subscribe({
-      next: (resp) => {
-        if (resp.IsSuccess) {
-          this.report = resp.Result;
-        } else {
-          this.reportModalVisible = false;
-        }
-      },
-      error: () => {
-        this.reportModalVisible = false;
-      }
+  openReport(tenderId: number): void {
+    this.router.navigate(['/admin/tender-report'], {
+      queryParams: { tenderId }
     });
   }
 }
