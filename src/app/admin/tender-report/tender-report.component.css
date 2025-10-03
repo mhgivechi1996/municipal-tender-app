@@ -1,0 +1,24 @@
+.report-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.summary-card {
+  max-width: 420px;
+}
+
+.winner {
+  margin-top: 12px;
+}
+
+nz-table {
+  background: #fff;
+}

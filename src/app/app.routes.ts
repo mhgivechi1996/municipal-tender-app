@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 
 import { AdminHomeComponent } from './admin/home/home.component';
 import { AdminTenderOffersComponent } from './admin/tender-offers/tender-offers.component';
+import { AdminTenderReportComponent } from './admin/tender-report/tender-report.component';
 
 import { ContractorHomeComponent } from './contractor/home/home.component';
 import { ContractorMyOffersComponent } from './contractor/my-offers/my-offers.component';
@@ -34,6 +35,7 @@ export const routes: Routes = [
     { path: 'admin', component: AdminHomeComponent },
     { path: 'admin/home', component: AdminHomeComponent },
     { path: 'admin/tender-offers', component: AdminTenderOffersComponent },
+    { path: 'admin/tender-report', component: AdminTenderReportComponent },
 
     { path: 'contractor', component: ContractorHomeComponent, canActivate : [canActivateTeam] },
     { path: 'contractor/home', component: ContractorHomeComponent, canActivate : [canActivateTeam]  },
