@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { Component, EffectRef, OnDestroy, OnInit, effect } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -8,7 +8,6 @@ import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
 import { PageResponse } from '../../models/ApiResponses';
 import { ObjTenderOffers } from '../../models/ObjTenderOffers';
 import { ContractorService } from '../../services/ContractorService';
-import { TenderSignalService } from '../../services/TenderSignalService';
 
 @Component({
   selector: 'app-contractor-tender-offers',
@@ -17,7 +16,7 @@ import { TenderSignalService } from '../../services/TenderSignalService';
   templateUrl: './tender-offers.component.html',
   styleUrl: './tender-offers.component.css'
 })
-export class ContractorTenderOffersComponent implements OnInit, OnDestroy {
+export class ContractorTenderOffersComponent implements OnInit {
   total = 0;
   list: ObjTenderOffers[] = [];
   loading = false;
@@ -25,7 +24,6 @@ export class ContractorTenderOffersComponent implements OnInit, OnDestroy {
   pageIndex = 1;
   private lastSortField: string | null = null;
   private lastSortOrder: string | null = null;
-  private refreshEffect?: EffectRef;
 
   isOfferModalVisible = false;
   selectedTender: ObjTenderOffers | null = null;
@@ -36,23 +34,8 @@ export class ContractorTenderOffersComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private contractorService: ContractorService,
-    private message: NzMessageService,
-    private tenderSignalService: TenderSignalService
-  ) {
-    this.refreshEffect = effect(() => {
-      const version = this.tenderSignalService.version();
-      if (version === 0) {
-        return;
-      }
-
-      const title = this.tenderSignalService.latestTitle();
-      this.loadDataFromServer(this.pageIndex, this.pageSize, this.lastSortField, this.lastSortOrder);
-      const infoMessage = title
-        ? `مناقصه "${title}" ثبت شد.`
-        : 'مناقصه جدید ثبت شد.';
-      this.message.info(infoMessage);
-    });
-  }
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
@@ -137,9 +120,5 @@ export class ContractorTenderOffersComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.refreshEffect?.destroy();
   }
 }

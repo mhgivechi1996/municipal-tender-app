@@ -168,14 +168,11 @@ export class AdminTenderOffersComponent implements OnInit {
 
     request$.subscribe({
       next: (resp) => {
-        if (resp?.IsSuccess) {
-          if (isNew) {
-            this.tenderSignalService.notifyTenderCreated(this.row.Title);
+          if (resp?.IsSuccess) {
+            this.isEditModalVisible = false;
+            this.loadDataFromServer(this.pageIndex, this.pageSize);
+            this.refreshCounts();
           }
-          this.isEditModalVisible = false;
-          this.loadDataFromServer(this.pageIndex, this.pageSize);
-          this.refreshCounts();
-        }
       }
     });
   }
