@@ -48,8 +48,8 @@ export class ContractorTenderOffersComponent implements OnInit, OnDestroy {
       const title = this.tenderSignalService.latestTitle();
       this.loadDataFromServer(this.pageIndex, this.pageSize, this.lastSortField, this.lastSortOrder);
       const infoMessage = title
-        ? `\u0645\u0646\u0627\u0642\u0635\u0647 "${title}" \u062B\u0628\u062A \u0634\u062F.`
-        : '\u0645\u0646\u0627\u0642\u0635\u0647 \u062C\u062F\u06CC\u062F \u062B\u0628\u062A \u0634\u062F.';
+        ? `مناقصه "${title}" ثبت شد.`
+        : 'مناقصه جدید ثبت شد.';
       this.message.info(infoMessage);
     });
   }
@@ -125,7 +125,7 @@ export class ContractorTenderOffersComponent implements OnInit, OnDestroy {
 
     const price = this.validateForm.get('PriceOffer')?.value as number;
     if (price == null) {
-      this.message.error('\u062B\u0628\u062A \u0642\u06CC\u0645\u062A \u067E\u06CC\u0634\u0646\u0647\u0627\u062F\u06CC \u0627\u0644\u0632\u0627\u0645\u06CC \u0627\u0633\u062A.');
+      this.message.error('ثبت قیمت پیشنهادی الزامی است.');
       return;
     }
 

@@ -25,6 +25,8 @@ export class AdminTenderOffersComponent implements OnInit {
   pageSize = 10;
   pageIndex = 1;
   includeExpired = true;
+  private lastSortField: string | null = null;
+  private lastSortOrder: string | null = null;
 
   isEditModalVisible = false;
 
@@ -46,22 +48,26 @@ export class AdminTenderOffersComponent implements OnInit {
     private tenderSignalService: TenderSignalService
   ) {}
 
-  ngOnInit(): void {
-    this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
-  }
+  ngOnInit(): void {}
 
   loadDataFromServer(
     pageIndex: number,
     pageSize: number,
-    sortField: string | null,
-    sortOrder: string | null
+    sortField?: string | null,
+    sortOrder?: string | null
   ): void {
     this.loading = true;
     this.pageIndex = pageIndex;
     this.pageSize = pageSize;
+    if (sortField !== undefined) {
+      this.lastSortField = sortField;
+    }
+    if (sortOrder !== undefined) {
+      this.lastSortOrder = sortOrder;
+    }
 
     this.adminService
-      .getTenderOffers(pageSize, pageIndex, sortField, sortOrder, this.includeExpired)
+      .getTenderOffers(pageSize, pageIndex, this.lastSortField, this.lastSortOrder, this.includeExpired)
       .subscribe({
         next: (resp: PageResponse<ObjTenderOffers>) => {
           this.loading = false;
@@ -91,7 +97,7 @@ export class AdminTenderOffersComponent implements OnInit {
 
   toggleIncludeExpired(value: boolean): void {
     this.includeExpired = value;
-    this.loadDataFromServer(1, this.pageSize, null, null);
+    this.loadDataFromServer(1, this.pageSize);
     this.refreshCounts();
   }
 
@@ -167,7 +173,7 @@ export class AdminTenderOffersComponent implements OnInit {
             this.tenderSignalService.notifyTenderCreated(this.row.Title);
           }
           this.isEditModalVisible = false;
-          this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+          this.loadDataFromServer(this.pageIndex, this.pageSize);
           this.refreshCounts();
         }
       }
@@ -178,7 +184,7 @@ export class AdminTenderOffersComponent implements OnInit {
     this.adminService.deleteTenderOffer(id).subscribe({
       next: (resp) => {
         if (resp?.IsSuccess) {
-          this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+          this.loadDataFromServer(this.pageIndex, this.pageSize);
           this.refreshCounts();
         }
       }

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ObjLoginResponse } from './models/ObjLoginResponse';
@@ -13,7 +13,7 @@ import { AdminService } from './services/AdminService';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   userLogin = false;
   currentUser: ObjLoginResponse = new ObjLoginResponse();
 
@@ -21,7 +21,9 @@ export class AppComponent implements OnInit {
   isCollapsed = false;
 
   roles = Roles;
+
   private hasFetchedTenderCounts = false;
+  private isFetchingTenderCounts = false;
 
   constructor(
     private router: Router,
@@ -33,12 +35,12 @@ export class AppComponent implements OnInit {
       this.currentUser = user;
       this.userLogin = !!user?.Token;
 
-      if (!this.userLogin || !this.isAdmin()) {
-        this.hasFetchedTenderCounts = false;
+      if (!this.userLogin) {
+        this.resetCounts();
         return;
       }
 
-      if (!this.hasFetchedTenderCounts) {
+      if (this.isAdmin() && !this.hasFetchedTenderCounts) {
         this.fetchTenderCounts();
       }
     });
@@ -48,17 +50,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    if (this.userLogin && this.isAdmin() && !this.hasFetchedTenderCounts) {
-      this.fetchTenderCounts();
-    }
-  }
 
   logout(): void {
     this.authService.logout();
     this.userLogin = false;
-    this.hasFetchedTenderCounts = false;
-    this.tenderSignalService.updateCounts({ total: 0, open: 0, expired: 0 });
+    this.resetCounts();
     this.router.navigate(['/login']);
   }
 
@@ -67,14 +63,27 @@ export class AppComponent implements OnInit {
   }
 
   private fetchTenderCounts(): void {
+    if (this.isFetchingTenderCounts) {
+      return;
+    }
+
+    this.isFetchingTenderCounts = true;
     this.adminService.getTenderCounts().subscribe({
       next: (counts) => {
         this.tenderSignalService.updateCounts(counts);
         this.hasFetchedTenderCounts = true;
+        this.isFetchingTenderCounts = false;
       },
       error: () => {
         this.hasFetchedTenderCounts = false;
+        this.isFetchingTenderCounts = false;
       }
     });
+  }
+
+  private resetCounts(): void {
+    this.hasFetchedTenderCounts = false;
+    this.isFetchingTenderCounts = false;
+    this.tenderSignalService.updateCounts({ total: 0, open: 0, expired: 0 });
   }
 }
