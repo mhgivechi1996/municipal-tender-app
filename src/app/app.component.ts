@@ -22,9 +22,6 @@ export class AppComponent {
 
   roles = Roles;
 
-  private hasFetchedTenderCounts = false;
-  private isFetchingTenderCounts = false;
-
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -36,11 +33,10 @@ export class AppComponent {
       this.userLogin = !!user?.Token;
 
       if (!this.userLogin) {
-        this.resetCounts();
         return;
       }
 
-      if (this.isAdmin() && !this.hasFetchedTenderCounts) {
+      if (this.isAdmin()) {
         this.fetchTenderCounts();
       }
     });
@@ -63,27 +59,12 @@ export class AppComponent {
   }
 
   private fetchTenderCounts(): void {
-    if (this.isFetchingTenderCounts) {
-      return;
-    }
-
-    this.isFetchingTenderCounts = true;
     this.adminService.getTenderCounts().subscribe({
-      next: (counts) => {
-        this.tenderSignalService.updateCounts(counts);
-        this.hasFetchedTenderCounts = true;
-        this.isFetchingTenderCounts = false;
-      },
-      error: () => {
-        this.hasFetchedTenderCounts = false;
-        this.isFetchingTenderCounts = false;
-      }
+      next: (counts) => this.tenderSignalService.updateCounts(counts)
     });
   }
 
   private resetCounts(): void {
-    this.hasFetchedTenderCounts = false;
-    this.isFetchingTenderCounts = false;
     this.tenderSignalService.updateCounts({ total: 0, open: 0, expired: 0 });
   }
 }
