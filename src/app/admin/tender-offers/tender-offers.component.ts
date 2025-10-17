@@ -48,7 +48,6 @@ export class AdminTenderOffersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
-    this.refreshCounts();
   }
 
   loadDataFromServer(
@@ -193,31 +192,12 @@ export class AdminTenderOffersComponent implements OnInit {
   }
 
   private refreshCounts(): void {
-    this.adminService
-      .getTenderOffers(1, 1, null, null, false)
-      .subscribe({
-        next: (openResp) => {
-          const openCount = openResp.Result?.RecordsCount ?? 0;
-
-          this.adminService
-            .getTenderOffers(1, 1, null, null, true)
-            .subscribe({
-              next: (allResp) => {
-                const totalCount = allResp.Result?.RecordsCount ?? 0;
-                const expiredCount = Math.max(totalCount - openCount, 0);
-                this.tenderSignalService.updateCounts(openCount, expiredCount);
-              },
-              error: () => {
-                const current = this.tenderSignalService.counts();
-                this.tenderSignalService.updateCounts(openCount, current.expired);
-              }
-            });
-        },
-        error: () => {
-          const current = this.tenderSignalService.counts();
-          this.tenderSignalService.updateCounts(current.open, current.expired);
-        }
-      });
+    this.adminService.getTenderCounts().subscribe({
+      next: (counts) => this.tenderSignalService.updateCounts(counts),
+      error: () => {
+        // silent fail, keep previous counts
+      }
+    });
   }
 }
 

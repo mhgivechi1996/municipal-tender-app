@@ -1,4 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
+import { TenderCounts } from '../models/TenderCounts';
 
 @Injectable({ providedIn: 'root' })
 export class TenderSignalService {
@@ -9,7 +10,7 @@ export class TenderSignalService {
 
   private readonly _version = signal(0);
   private readonly _latestTitle = signal<string | null>(null);
-  private readonly _counts = signal<TenderCounts>({ open: 0, expired: 0 });
+  private readonly _counts = signal<TenderCounts>({ total: 0, open: 0, expired: 0 });
 
   readonly version = computed(() => this._version());
   readonly latestTitle = computed(() => this._latestTitle());
@@ -39,10 +40,11 @@ export class TenderSignalService {
     this.applyTenderCreated(title, true);
   }
 
-  updateCounts(open: number, expired: number): void {
+  updateCounts(counts: TenderCounts): void {
     const normalized: TenderCounts = {
-      open: Math.max(0, open),
-      expired: Math.max(0, expired)
+      total: Math.max(0, counts.total),
+      open: Math.max(0, counts.open),
+      expired: Math.max(0, counts.expired)
     };
     this.applyTenderCounts(normalized, true);
   }
@@ -63,6 +65,7 @@ export class TenderSignalService {
 
   private applyTenderCounts(counts: TenderCounts, broadcast: boolean): void {
     this._counts.set({
+      total: counts.total,
       open: counts.open,
       expired: counts.expired
     });
@@ -87,9 +90,4 @@ interface TenderCreatedMessage {
 interface TenderCountsMessage {
   type: 'tender-counts';
   counts: TenderCounts;
-}
-
-interface TenderCounts {
-  open: number;
-  expired: number;
 }

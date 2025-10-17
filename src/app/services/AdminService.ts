@@ -9,6 +9,7 @@ import { ObjTenderOffers } from '../models/ObjTenderOffers';
 import { ObjOffersReport } from '../models/ObjOffersReport';
 import { ObjOfferParticipant } from '../models/ObjOfferParticipant';
 import { ApiResponse, PageResponse, PageResult } from '../models/ApiResponses';
+import { TenderCounts } from '../models/TenderCounts';
 
 interface CreateTenderOfferPayload {
   Title: string;
@@ -21,6 +22,12 @@ interface CreateTenderOfferPayload {
 
 interface UpdateTenderOfferPayload extends CreateTenderOfferPayload {
   Id: number;
+}
+
+interface TenderCountsResponsePayload {
+  Total: number;
+  Open: number;
+  Expired: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -40,7 +47,6 @@ export class AdminService {
     sortOrder?: string | null,
     includeExpired: boolean = true
   ): Observable<PageResponse<ObjTenderOffers>> {
-    console.log(includeExpired)
     const body = {
       IncludeExpired: includeExpired,
       PageSize: pageSize,
@@ -111,7 +117,7 @@ export class AdminService {
         headers: this.getHeaders()
       })
       .pipe(
-        tap((resp) => this.showToast(resp, 'مناقصه با موفقیت ثبت شد.')),
+        tap((resp) => this.showToast(resp, 'مناقصه با موفقیت حذف شد.')),
         catchError((error) => this.handleError(error))
       );
   }
@@ -130,6 +136,28 @@ export class AdminService {
           if (!resp.IsSuccess) {
             this.message.error(resp.Message || 'دریافت فهرست مناقصه‌ها ناموفق بود');
           }
+        }),
+        catchError((error) => this.handleError(error))
+      );
+  }
+
+  getTenderCounts(): Observable<TenderCounts> {
+    return this.http
+      .get<ApiResponse<TenderCountsResponsePayload>>(`${this.baseUrl}/GetCounts`, {
+        headers: this.getHeaders()
+      })
+      .pipe(
+        map((resp) => {
+          if (resp.IsSuccess && resp.Result) {
+            return {
+              total: resp.Result.Total ?? 0,
+              open: resp.Result.Open ?? 0,
+              expired: resp.Result.Expired ?? 0
+            };
+          }
+
+          this.message.error(resp.Message || 'دریافت آمار مناقصه‌ها ناموفق بود');
+          return { total: 0, open: 0, expired: 0 };
         }),
         catchError((error) => this.handleError(error))
       );
@@ -205,7 +233,7 @@ export class AdminService {
     if (resp.IsSuccess) {
       this.message.success(resp.Message || fallback);
     } else {
-      this.message.error(resp.Message || 'مناقصه با موفقیت حذف شد.');
+      this.message.error(resp.Message || 'عملیات با خطا مواجه شد.');
     }
   }
 
