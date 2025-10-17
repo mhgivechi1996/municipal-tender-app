@@ -1,32 +1,53 @@
-<div *ngIf="this.userLogin">
+﻿<div *ngIf="userLogin">
   <nz-layout dir="rtl">
-    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
-      <div class="logo">{{ userLogin ? currentUser.User.Username : "" }}</div>
+    <nz-sider
+      nzCollapsible
+      [(nzCollapsed)]="isCollapsed"
+      [nzTrigger]="null"
+      [nzWidth]="260"
+      [nzCollapsedWidth]="64"
+    >
+      <div class="logo">{{ userLogin ? currentUser.User.Username : '' }}</div>
       <ul nz-menu nzTheme="dark" nzMode="inline">
         <li nz-menu-item routerLink="/">
           <span nz-icon nzType="home"></span>
-          <span>داشبورد</span>
+          <span>&#1589;&#1601;&#1581;&#1607; &#1575;&#1589;&#1604;&#1740;</span>
         </li>
-        <li nz-submenu nzTitle="مدیریت" nzIcon="user" *ngIf="currentUser.User.Roles.includes(roles.Admin)">
+        <li
+          nz-submenu
+          nzIcon="user"
+          nzTitle="&#1576;&#1582;&#1588; &#1575;&#1583;&#1605;&#1740;&#1606;"
+          *ngIf="currentUser.User.Roles.includes(roles.Admin)"
+        >
           <ul>
-            <li nz-menu-item routerLink="/admin/home">داشبورد</li>
-            <li nz-menu-item routerLink="/admin/tender-offers">مناقصه</li>
+            <li nz-menu-item routerLink="/admin/home">&#1583;&#1575;&#1588;&#1576;&#1608;&#1585;&#1583;</li>
+            <li nz-menu-item routerLink="/admin/tender-offers">
+              &#1605;&#1602;&#1575;&#1740;&#1587;&#1607; &#1605;&#1606;&#1575;&#1602;&#1589;&#1575;&#1578;
+              <span class="menu-stat">
+                (
+                &#1576;&#1575;&#1586;: {{ tenderSignalService.counts().open }}
+                |
+                &#1605;&#1606;&#1602;&#1590;&#1740;: {{ tenderSignalService.counts().expired }}
+                )
+              </span>
+            </li>
           </ul>
         </li>
-        <li nz-submenu nzTitle="پیمانکار" nzIcon="team" *ngIf="currentUser.User.Roles.includes(roles.Contractor)">
+        <li
+          nz-submenu
+          nzIcon="team"
+          nzTitle="&#1576;&#1582;&#1588; &#1662;&#1740;&#1605;&#1575;&#1606;&#1705;&#1575;&#1585;"
+          *ngIf="currentUser.User.Roles.includes(roles.Contractor)"
+        >
           <ul>
-            <li nz-menu-item routerLink="/contractor/home">داشبورد</li>
-            <li nz-menu-item routerLink="/contractor/tender-offers">
-              مناقصه ها
-            </li>
-            <li nz-menu-item routerLink="/contractor/my-offers">
-              مناقصه های من
-            </li>
+            <li nz-menu-item routerLink="/contractor/home">&#1583;&#1575;&#1588;&#1576;&#1608;&#1585;&#1583;</li>
+            <li nz-menu-item routerLink="/contractor/tender-offers">&#1605;&#1606;&#1575;&#1602;&#1589;&#1575;&#1578; &#1601;&#1593;&#1575;&#1604;</li>
+            <li nz-menu-item routerLink="/contractor/my-offers">&#1605;&#1606;&#1575;&#1602;&#1589;&#1575;&#1578; &#1605;&#1606;</li>
           </ul>
         </li>
         <li nz-menu-item (click)="logout()">
           <span nz-icon nzType="logout"></span>
-          <span>خروج</span>
+          <span>&#1582;&#1585;&#1608;&#1580;</span>
         </li>
       </ul>
     </nz-sider>
@@ -44,11 +65,11 @@
           <router-outlet />
         </div>
       </nz-content>
-      <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
+      <nz-footer>Ant Design &#169;2020 Implemented By Angular</nz-footer>
     </nz-layout>
   </nz-layout>
 </div>
 
-<div *ngIf="!this.userLogin" dir="rtl">
+<div *ngIf="!userLogin" dir="rtl">
   <router-outlet />
 </div>

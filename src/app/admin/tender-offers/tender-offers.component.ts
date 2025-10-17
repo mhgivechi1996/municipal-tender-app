@@ -1,14 +1,15 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+﻿import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
-import { AdminService } from '../../services/AdminService';
-import { ObjTenderOffers } from '../../models/ObjTenderOffers';
 import { PageResponse } from '../../models/ApiResponses';
+import { ObjTenderOffers } from '../../models/ObjTenderOffers';
+import { AdminService } from '../../services/AdminService';
+import { TenderSignalService } from '../../services/TenderSignalService';
 
 @Component({
   selector: 'app-admin-tender-offers',
@@ -41,11 +42,13 @@ export class AdminTenderOffersComponent implements OnInit {
     private fb: FormBuilder,
     private adminService: AdminService,
     private message: NzMessageService,
-    private router: Router
+    private router: Router,
+    private tenderSignalService: TenderSignalService
   ) {}
 
   ngOnInit(): void {
     this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+    this.refreshCounts();
   }
 
   loadDataFromServer(
@@ -90,6 +93,7 @@ export class AdminTenderOffersComponent implements OnInit {
   toggleIncludeExpired(value: boolean): void {
     this.includeExpired = value;
     this.loadDataFromServer(1, this.pageSize, null, null);
+    this.refreshCounts();
   }
 
   addRow(): void {
@@ -131,17 +135,17 @@ export class AdminTenderOffersComponent implements OnInit {
     const toPrice = formValue['ToPrice'] as number | null;
 
     if (!beginDate || !endDate) {
-      this.message.error('لطفاً تاریخ شروع و پایان را مشخص کنید.');
+      this.message.error('\u0648\u0627\u0631\u062F \u06A9\u0631\u062F\u0646 \u062A\u0627\u0631\u06CC\u062E \u0634\u0631\u0648\u0639 \u0648 \u067E\u0627\u06CC\u0627\u0646 \u0627\u0644\u0632\u0627\u0645\u06CC \u0627\u0633\u062A.');
       return;
     }
 
     if (endDate < beginDate) {
-      this.message.error('تاریخ پایان باید بعد از تاریخ شروع باشد.');
+      this.message.error('\u062A\u0627\u0631\u06CC\u062E \u067E\u0627\u06CC\u0627\u0646 \u0646\u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u062F \u0642\u0628\u0644 \u0627\u0632 \u062A\u0627\u0631\u06CC\u062E \u0634\u0631\u0648\u0639 \u0628\u0627\u0634\u062F.');
       return;
     }
 
     if ((fromPrice ?? 0) > (toPrice ?? 0)) {
-      this.message.error('حداکثر قیمت باید از حداقل قیمت بزرگ‌تر یا برابر باشد.');
+      this.message.error('\u062D\u062F\u0627\u0642\u0644 \u0642\u06CC\u0645\u062A \u0646\u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u062F \u0628\u06CC\u0634\u062A\u0631 \u0627\u0632 \u062D\u062F\u0627\u06A9\u062B\u0631 \u0642\u06CC\u0645\u062A \u0628\u0627\u0634\u062F.');
       return;
     }
 
@@ -152,15 +156,20 @@ export class AdminTenderOffersComponent implements OnInit {
     this.row.FromPrice = fromPrice ?? 0;
     this.row.ToPrice = toPrice ?? 0;
 
-    const request$ = this.row.Id === 0
+    const isNew = this.row.Id === 0;
+    const request$ = isNew
       ? this.adminService.createTenderOffer(this.row)
       : this.adminService.updateTenderOffer(this.row);
 
     request$.subscribe({
       next: (resp) => {
         if (resp?.IsSuccess) {
+          if (isNew) {
+            this.tenderSignalService.notifyTenderCreated(this.row.Title);
+          }
           this.isEditModalVisible = false;
           this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+          this.refreshCounts();
         }
       }
     });
@@ -171,6 +180,7 @@ export class AdminTenderOffersComponent implements OnInit {
       next: (resp) => {
         if (resp?.IsSuccess) {
           this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+          this.refreshCounts();
         }
       }
     });
@@ -180,6 +190,34 @@ export class AdminTenderOffersComponent implements OnInit {
     this.router.navigate(['/admin/tender-report'], {
       queryParams: { tenderId }
     });
+  }
+
+  private refreshCounts(): void {
+    this.adminService
+      .getTenderOffers(1, 1, null, null, false)
+      .subscribe({
+        next: (openResp) => {
+          const openCount = openResp.Result?.RecordsCount ?? 0;
+
+          this.adminService
+            .getTenderOffers(1, 1, null, null, true)
+            .subscribe({
+              next: (allResp) => {
+                const totalCount = allResp.Result?.RecordsCount ?? 0;
+                const expiredCount = Math.max(totalCount - openCount, 0);
+                this.tenderSignalService.updateCounts(openCount, expiredCount);
+              },
+              error: () => {
+                const current = this.tenderSignalService.counts();
+                this.tenderSignalService.updateCounts(openCount, current.expired);
+              }
+            });
+        },
+        error: () => {
+          const current = this.tenderSignalService.counts();
+          this.tenderSignalService.updateCounts(current.open, current.expired);
+        }
+      });
   }
 }
 

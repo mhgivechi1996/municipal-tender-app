@@ -1,13 +1,14 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+﻿import { CommonModule } from '@angular/common';
+import { Component, EffectRef, OnDestroy, OnInit, effect } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
-import { ContractorService } from '../../services/ContractorService';
-import { ObjTenderOffers } from '../../models/ObjTenderOffers';
 import { PageResponse } from '../../models/ApiResponses';
+import { ObjTenderOffers } from '../../models/ObjTenderOffers';
+import { ContractorService } from '../../services/ContractorService';
+import { TenderSignalService } from '../../services/TenderSignalService';
 
 @Component({
   selector: 'app-contractor-tender-offers',
@@ -16,12 +17,15 @@ import { PageResponse } from '../../models/ApiResponses';
   templateUrl: './tender-offers.component.html',
   styleUrl: './tender-offers.component.css'
 })
-export class ContractorTenderOffersComponent implements OnInit {
+export class ContractorTenderOffersComponent implements OnInit, OnDestroy {
   total = 0;
   list: ObjTenderOffers[] = [];
   loading = false;
   pageSize = 10;
   pageIndex = 1;
+  private lastSortField: string | null = null;
+  private lastSortOrder: string | null = null;
+  private refreshEffect?: EffectRef;
 
   isOfferModalVisible = false;
   selectedTender: ObjTenderOffers | null = null;
@@ -32,8 +36,23 @@ export class ContractorTenderOffersComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private contractorService: ContractorService,
-    private message: NzMessageService
-  ) {}
+    private message: NzMessageService,
+    private tenderSignalService: TenderSignalService
+  ) {
+    this.refreshEffect = effect(() => {
+      const version = this.tenderSignalService.version();
+      if (version === 0) {
+        return;
+      }
+
+      const title = this.tenderSignalService.latestTitle();
+      this.loadDataFromServer(this.pageIndex, this.pageSize, this.lastSortField, this.lastSortOrder);
+      const infoMessage = title
+        ? `\u0645\u0646\u0627\u0642\u0635\u0647 "${title}" \u062B\u0628\u062A \u0634\u062F.`
+        : '\u0645\u0646\u0627\u0642\u0635\u0647 \u062C\u062F\u06CC\u062F \u062B\u0628\u062A \u0634\u062F.';
+      this.message.info(infoMessage);
+    });
+  }
 
   ngOnInit(): void {
     this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
@@ -48,9 +67,11 @@ export class ContractorTenderOffersComponent implements OnInit {
     this.loading = true;
     this.pageIndex = pageIndex;
     this.pageSize = pageSize;
+    this.lastSortField = sortField ?? this.lastSortField;
+    this.lastSortOrder = sortOrder ?? this.lastSortOrder;
 
     this.contractorService
-      .getTenderOffers(pageSize, pageIndex, sortField, sortOrder)
+      .getTenderOffers(pageSize, pageIndex, this.lastSortField, this.lastSortOrder)
       .subscribe({
         next: (resp: PageResponse<ObjTenderOffers>) => {
           this.loading = false;
@@ -104,7 +125,7 @@ export class ContractorTenderOffersComponent implements OnInit {
 
     const price = this.validateForm.get('PriceOffer')?.value as number;
     if (price == null) {
-      this.message.error('لطفاً مبلغ پیشنهادی را وارد کنید.');
+      this.message.error('\u062B\u0628\u062A \u0642\u06CC\u0645\u062A \u067E\u06CC\u0634\u0646\u0647\u0627\u062F\u06CC \u0627\u0644\u0632\u0627\u0645\u06CC \u0627\u0633\u062A.');
       return;
     }
 
@@ -112,10 +133,13 @@ export class ContractorTenderOffersComponent implements OnInit {
       next: (resp) => {
         if (resp?.IsSuccess) {
           this.isOfferModalVisible = false;
-          this.loadDataFromServer(this.pageIndex, this.pageSize, null, null);
+          this.loadDataFromServer(this.pageIndex, this.pageSize, this.lastSortField, this.lastSortOrder);
         }
       }
     });
   }
-}
 
+  ngOnDestroy(): void {
+    this.refreshEffect?.destroy();
+  }
+}

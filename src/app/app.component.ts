@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { of } from 'rxjs';
 
-import { AuthService } from './services/AuthService';
 import { ObjLoginResponse } from './models/ObjLoginResponse';
 import { Roles } from './models/Roles';
+import { AuthService } from './services/AuthService';
+import { TenderSignalService } from './services/TenderSignalService';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +12,9 @@ import { Roles } from './models/Roles';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-
 export class AppComponent implements OnInit {
-  userLogin: boolean = false;
+  userLogin = false;
   currentUser: ObjLoginResponse = new ObjLoginResponse();
-  //currentUserSubscription: Subscription = new Subscription();
 
   title = 'municipal-tender-app';
   isCollapsed = false;
@@ -27,21 +23,23 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    public authService: AuthService
-
+    public authService: AuthService,
+    public tenderSignalService: TenderSignalService
   ) {
-    this.authService.currentUser.subscribe(x => this.currentUser = x);
+    this.authService.currentUser.subscribe((x) => (this.currentUser = x));
 
-    this.userLogin = this.authService.currentUserValue.Token != undefined && this.authService.currentUserValue.Token != "";
+    this.userLogin =
+      this.authService.currentUserValue.Token !== undefined &&
+      this.authService.currentUserValue.Token !== '';
 
-    if (!this.userLogin) { this.logout(); }
+    if (!this.userLogin) {
+      this.logout();
+    }
   }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit(): void {}
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.userLogin = false;
     this.router.navigate(['/login']);

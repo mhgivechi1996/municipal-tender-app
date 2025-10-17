@@ -43,4 +43,7 @@
 
   nz-footer {
     text-align: center;
-  }
+  }.menu-stat {
+  font-size: 12px;
+  margin-inline-start: 4px;
+}
