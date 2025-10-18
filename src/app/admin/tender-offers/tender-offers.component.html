@@ -1,55 +1,25 @@
 ﻿<div class="page-header">
-  <h1 class="pageName">مناقصه‌های شهرداری</h1>
+  <h1 class="pageName">مدیریت مناقصه‌ها</h1>
   <div class="actionBar">
     <label class="include-expired-toggle">
-      <span>نمایش مناقصه‌های منقضی</span>
+      <span>نمایش مناقصه‌های منقضی‌شده</span>
       <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired($event)"></nz-switch>
     </label>
-    <button nz-button nzType="primary" (click)="addRow()">ثبت مناقصه جدید</button>
+    <button nz-button nzType="primary" (click)="addRow()">افزودن مناقصه جدید</button>
   </div>
 </div>
 
-<nz-table nzShowSizeChanger [nzData]="list" [nzFrontPagination]="false" [nzLoading]="loading" [nzTotal]="total"
-  [nzPageSize]="pageSize" [nzPageIndex]="pageIndex" (nzQueryParams)="onQueryParamsChange($event)">
-  <thead>
-    <tr>
-      <th nzColumnKey="Id" [nzSortFn]="true">شناسه</th>
-      <th nzColumnKey="Title">عنوان</th>
-      <th nzColumnKey="Description">توضیحات</th>
-      <th nzColumnKey="BeginDate">تاریخ شروع</th>
-      <th nzColumnKey="EndDate">تاریخ پایان</th>
-      <th nzColumnKey="FromPrice">حداقل قیمت</th>
-      <th nzColumnKey="ToPrice">حداکثر قیمت</th>
-      <th nzColumnKey="MinPriceOffer">کمترین قیمت پیشنهادی</th>
-      <th nzColumnKey="UsersCount">تعداد شرکت‌کنندگان</th>
-      <th>عملیات</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of list">
-      <td>{{ data.Id }}</td>
-      <td>{{ data.Title }}</td>
-      <td>{{ data.Description }}</td>
-      <td>{{ data.BeginDate | date: 'yyyy-MM-dd' }}</td>
-      <td>{{ data.EndDate | date: 'yyyy-MM-dd' }}</td>
-      <td>{{ data.FromPrice | number }}</td>
-      <td>{{ data.ToPrice | number }}</td>
-      <td>{{ data.Report.MinPriceOffer | number }}</td>
-      <td>{{ data.Report.UsersCount | number }}</td>
-      <td class="actions">
-        <button nz-button nzType="link" (click)="editRow(data)">ویرایش</button>
-        <button nz-button nzType="link" (click)="openReport(data.Id)">گزارش</button>
-        <button nz-button nzType="link" nz-popconfirm nzPopconfirmTitle="آیا از حذف این مناقصه مطمئن هستید؟"
-          (nzOnConfirm)="deleteRow(data.Id)" nzCancelText="انصراف" nzOkText="حذف">
-          حذف
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+<ag-grid-angular
+  class="ag-theme-alpine tender-grid"
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColumnDefs"
+  [rowData]="rowData"
+  (gridReady)="onGridReady($event)"
+  (cellClicked)="onCellClicked($event)"
+></ag-grid-angular>
 
 <form nz-form [formGroup]="validateForm">
-  <nz-modal [(nzVisible)]="isEditModalVisible" nzTitle="مناقصه" nzOkText="ذخیره" nzCancelText="انصراف"
+  <nz-modal [(nzVisible)]="isEditModalVisible" nzTitle="ویرایش مناقصه" nzOkText="ذخیره" nzCancelText="انصراف"
     [nzOkLoading]="loading" (nzOnOk)="submitForm()" (nzOnCancel)="isEditModalVisible = false" nzDirection="rtl">
     <ng-container *nzModalContent>
       <nz-form-item>

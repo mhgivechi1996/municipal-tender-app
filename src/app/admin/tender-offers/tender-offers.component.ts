@@ -1,9 +1,24 @@
-﻿import { CommonModule } from '@angular/common';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+  AllCommunityModule,
+  CellClickedEvent,
+  ColDef,
+  GridApi,
+  GridReadyEvent,
+  ModuleRegistry,
+  ValueFormatterParams,
+  ValueGetterParams
+} from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
 import { PageResponse } from '../../models/ApiResponses';
@@ -14,19 +29,81 @@ import { TenderSignalService } from '../../services/TenderSignalService';
 @Component({
   selector: 'app-admin-tender-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule, AgGridModule],
   templateUrl: './tender-offers.component.html',
   styleUrl: './tender-offers.component.css'
 })
 export class AdminTenderOffersComponent implements OnInit {
-  total = 0;
-  list: ObjTenderOffers[] = [];
+  readonly defaultColumnDefs: ColDef = {
+    flex: 1,
+    minWidth: 140,
+    sortable: true,
+    filter: true,
+    resizable: true
+  };
+
+  readonly columnDefs: ColDef[] = [
+    { headerName: 'شناسه', field: 'Id', maxWidth: 120 },
+    { headerName: 'عنوان', field: 'Title' },
+    { headerName: 'توضیحات', field: 'Description' },
+    {
+      headerName: 'تاریخ شروع',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) =>
+        params.data?.BeginDate ? new Date(params.data.BeginDate).toISOString().split('T')[0] : ''
+    },
+    {
+      headerName: 'تاریخ پایان',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) =>
+        params.data?.EndDate ? new Date(params.data.EndDate).toISOString().split('T')[0] : ''
+    },
+    {
+      headerName: 'حداقل قیمت',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.FromPrice ?? null,
+      valueFormatter: (params: ValueFormatterParams) =>
+        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+    },
+    {
+      headerName: 'حداکثر قیمت',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.ToPrice ?? null,
+      valueFormatter: (params: ValueFormatterParams) =>
+        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+    },
+    {
+      headerName: 'کمترین قیمت پیشنهادی',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.Report?.MinPriceOffer ?? null,
+      valueFormatter: (params: ValueFormatterParams) =>
+        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+    },
+    {
+      headerName: 'تعداد شرکت‌کنندگان',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.Report?.UsersCount ?? null,
+      valueFormatter: (params: ValueFormatterParams) =>
+        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+    },
+    {
+      headerName: 'عملیات',
+      field: 'actions',
+      sortable: false,
+      filter: false,
+      menuTabs: [],
+      suppressHeaderContextMenu: true,
+      minWidth: 240,
+      cellRenderer: () => `
+        <div class="grid-actions">
+          <button type="button" class="action-button action-edit">ویرایش</button>
+          <button type="button" class="action-button action-report">گزارش</button>
+          <button type="button" class="action-button action-delete">حذف</button>
+        </div>
+      `
+    }
+  ];
+
+  rowData: ObjTenderOffers[] = [];
   loading = false;
-  pageSize = 10;
-  pageIndex = 1;
   includeExpired = true;
-  private lastSortField: string | null = null;
-  private lastSortOrder: string | null = null;
+
+  private gridApi: GridApi | null = null;
+  private readonly fetchPageSize = 500;
 
   isEditModalVisible = false;
 
@@ -48,57 +125,87 @@ export class AdminTenderOffersComponent implements OnInit {
     private tenderSignalService: TenderSignalService
   ) {}
 
-  ngOnInit(): void {}
-
-  loadDataFromServer(
-    pageIndex: number,
-    pageSize: number,
-    sortField?: string | null,
-    sortOrder?: string | null
-  ): void {
-    this.loading = true;
-    this.pageIndex = pageIndex;
-    this.pageSize = pageSize;
-    if (sortField !== undefined) {
-      this.lastSortField = sortField;
-    }
-    if (sortOrder !== undefined) {
-      this.lastSortOrder = sortOrder;
-    }
-
-    this.adminService
-      .getTenderOffers(pageSize, pageIndex, this.lastSortField, this.lastSortOrder, this.includeExpired)
-      .subscribe({
-        next: (resp: PageResponse<ObjTenderOffers>) => {
-          this.loading = false;
-          if (resp.IsSuccess && resp.Result) {
-            this.total = resp.Result.RecordsCount;
-            this.list = resp.Result.Records;
-          } else {
-            this.total = 0;
-            this.list = [];
-          }
-        },
-        error: () => {
-          this.loading = false;
-          this.total = 0;
-          this.list = [];
-        }
-      });
+  ngOnInit(): void {
+    this.loadTenderOffers();
   }
 
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    const { pageSize, pageIndex, sort } = params;
-    const currentSort = sort.find((item) => item.value !== null);
-    const sortField = currentSort?.key ?? null;
-    const sortOrder = currentSort?.value ?? null;
-    this.loadDataFromServer(pageIndex, pageSize, sortField, sortOrder);
+  onGridReady(event: GridReadyEvent): void {
+    const gridApi = event.api;
+    gridApi.setGridOption('domLayout', 'autoHeight');
+    this.gridApi = gridApi;
+    if (this.loading) {
+      gridApi.showLoadingOverlay();
+    } else if (this.rowData.length === 0) {
+      gridApi.showNoRowsOverlay();
+    } else {
+      gridApi.hideOverlay();
+    }
+  }
+
+  onCellClicked(event: CellClickedEvent): void {
+    if (event.colDef.field !== 'actions' || !event.data) {
+      return;
+    }
+
+    const domEvent = event.event;
+    if (!domEvent) {
+      return;
+    }
+
+    const target = domEvent.target instanceof HTMLElement ? domEvent.target : null;
+    const actionButton = target?.closest('.action-button') as HTMLElement | null;
+    if (!actionButton) {
+      return;
+    }
+
+    domEvent.preventDefault();
+    domEvent.stopPropagation();
+    if (actionButton.classList.contains('action-edit')) {
+      this.editRow(event.data);
+    } else if (actionButton.classList.contains('action-report')) {
+      this.openReport(event.data.Id);
+    } else if (actionButton.classList.contains('action-delete')) {
+      if (confirm('آیا از حذف این مورد اطمینان دارید؟')) {
+        this.deleteRow(event.data.Id);
+      }
+    }
   }
 
   toggleIncludeExpired(value: boolean): void {
     this.includeExpired = value;
-    this.loadDataFromServer(1, this.pageSize);
+    this.loadTenderOffers();
     this.refreshCounts();
+  }
+
+  private loadTenderOffers(): void {
+    this.loading = true;
+    if (this.gridApi) {
+      this.gridApi.showLoadingOverlay();
+    }
+
+    this.adminService
+      .getTenderOffers(this.fetchPageSize, 1, null, null, this.includeExpired)
+      .subscribe({
+        next: (resp: PageResponse<ObjTenderOffers>) => {
+          this.rowData = resp?.Result?.Records ?? [];
+          this.loading = false;
+          if (this.gridApi) {
+            if (this.rowData.length === 0) {
+              this.gridApi.showNoRowsOverlay();
+            } else {
+              this.gridApi.hideOverlay();
+            }
+          }
+        },
+        error: () => {
+          this.rowData = [];
+          this.loading = false;
+          this.message.error('بارگذاری فهرست مناقصه‌ها با خطا روبه‌رو شد');
+          if (this.gridApi) {
+            this.gridApi.showNoRowsOverlay();
+          }
+        }
+      });
   }
 
   addRow(): void {
@@ -140,17 +247,17 @@ export class AdminTenderOffersComponent implements OnInit {
     const toPrice = formValue['ToPrice'] as number | null;
 
     if (!beginDate || !endDate) {
-      this.message.error('\u0648\u0627\u0631\u062F \u06A9\u0631\u062F\u0646 \u062A\u0627\u0631\u06CC\u062E \u0634\u0631\u0648\u0639 \u0648 \u067E\u0627\u06CC\u0627\u0646 \u0627\u0644\u0632\u0627\u0645\u06CC \u0627\u0633\u062A.');
+      this.message.error('ورود تاریخ شروع و پایان الزامی است.');
       return;
     }
 
     if (endDate < beginDate) {
-      this.message.error('\u062A\u0627\u0631\u06CC\u062E \u067E\u0627\u06CC\u0627\u0646 \u0646\u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u062F \u0642\u0628\u0644 \u0627\u0632 \u062A\u0627\u0631\u06CC\u062E \u0634\u0631\u0648\u0639 \u0628\u0627\u0634\u062F.');
+      this.message.error('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');
       return;
     }
 
     if ((fromPrice ?? 0) > (toPrice ?? 0)) {
-      this.message.error('\u062D\u062F\u0627\u0642\u0644 \u0642\u06CC\u0645\u062A \u0646\u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u062F \u0628\u06CC\u0634\u062A\u0631 \u0627\u0632 \u062D\u062F\u0627\u06A9\u062B\u0631 \u0642\u06CC\u0645\u062A \u0628\u0627\u0634\u062F.');
+      this.message.error('حداقل قیمت نمی‌تواند بزرگ‌تر از حداکثر قیمت باشد.');
       return;
     }
 
@@ -168,11 +275,11 @@ export class AdminTenderOffersComponent implements OnInit {
 
     request$.subscribe({
       next: (resp) => {
-          if (resp?.IsSuccess) {
-            this.isEditModalVisible = false;
-            this.loadDataFromServer(this.pageIndex, this.pageSize);
-            this.refreshCounts();
-          }
+        if (resp?.IsSuccess) {
+          this.isEditModalVisible = false;
+          this.loadTenderOffers();
+          this.refreshCounts();
+        }
       }
     });
   }
@@ -181,7 +288,7 @@ export class AdminTenderOffersComponent implements OnInit {
     this.adminService.deleteTenderOffer(id).subscribe({
       next: (resp) => {
         if (resp?.IsSuccess) {
-          this.loadDataFromServer(this.pageIndex, this.pageSize);
+          this.loadTenderOffers();
           this.refreshCounts();
         }
       }
@@ -198,10 +305,9 @@ export class AdminTenderOffersComponent implements OnInit {
     this.adminService.getTenderCounts().subscribe({
       next: (counts) => this.tenderSignalService.updateCounts(counts),
       error: () => {
-        // silent fail, keep previous counts
+        // silent fail
       }
     });
   }
 }
-
 

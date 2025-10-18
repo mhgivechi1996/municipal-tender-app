@@ -1,0 +1,22 @@
+.tender-grid {
+  width: 100%;
+  direction: rtl;
+}
+
+.grid-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.grid-actions .action-button {
+  background: none;
+  border: none;
+  color: #1890ff;
+  cursor: pointer;
+  padding: 0;
+}
+
+.grid-actions .action-button:hover {
+  text-decoration: underline;
+}
