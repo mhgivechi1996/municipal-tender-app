@@ -47,3 +47,9 @@
   font-size: 12px;
   margin-inline-start: 4px;
 }
+
+.menu-stat .stat-line {
+  display: block;
+  font-size: 12px;
+  opacity: 0.9;
+}
