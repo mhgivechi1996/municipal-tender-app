@@ -9,14 +9,42 @@
   </div>
 </div>
 
-<ag-grid-angular
-  class="ag-theme-alpine tender-grid"
-  [columnDefs]="columnDefs"
-  [defaultColDef]="defaultColumnDefs"
-  [rowData]="rowData"
-  (gridReady)="onGridReady($event)"
-  (cellClicked)="onCellClicked($event)"
-></ag-grid-angular>
+<div class="floating-filter-layout">
+  <div class="floating-filter-toolbar">
+    <div class="button-group">
+      <button class="toolbar-button" type="button" (click)="filterActiveTenders()">مناقصه‌های فعال</button>
+      <button class="toolbar-button" type="button" (click)="filterEndingSoon()">رو به اتمام (۷ روز آینده)</button>
+      <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته اخیر</button>
+      <button class="toolbar-button link" type="button" (click)="clearDateFilters()">حذف فیلتر تاریخ</button>
+    </div>
+    <div class="button-group">
+      <button class="toolbar-button" type="button" (click)="filterHighBudget()">بودجه بالا (+۵ میلیارد)</button>
+      <button class="toolbar-button" type="button" (click)="filterMidBudget()">بودجه متوسط (۱ تا ۵ میلیارد)</button>
+      <button class="toolbar-button" type="button" (click)="filterLowBudget()">بودجه زیر ۱ میلیارد</button>
+      <button class="toolbar-button link" type="button" (click)="clearBudgetFilters()">حذف فیلتر مبلغ</button>
+    </div>
+    <div class="button-group">
+      <button class="toolbar-button" type="button" (click)="filterHasParticipants()">با شرکت‌کننده</button>
+      <button class="toolbar-button" type="button" (click)="filterNoParticipants()">بدون شرکت‌کننده</button>
+      <button class="toolbar-button link" type="button" (click)="clearParticipationFilter()">حذف فیلتر مشارکت</button>
+    </div>
+    <div class="button-group">
+      <button class="toolbar-button primary" type="button" (click)="clearAllFilters()">بازنشانی همه فیلترها</button>
+    </div>
+  </div>
+
+  <div class="grid-wrapper">
+    <ag-grid-angular
+      class="ag-theme-quartz tender-grid"
+      [theme]="'legacy'"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColumnDefs"
+      [rowData]="rowData"
+      (gridReady)="onGridReady($event)"
+      (cellClicked)="onCellClicked($event)"
+    ></ag-grid-angular>
+  </div>
+</div>
 
 <form nz-form [formGroup]="validateForm">
   <nz-modal [(nzVisible)]="isEditModalVisible" nzTitle="ویرایش مناقصه" nzOkText="ذخیره" nzCancelText="انصراف"

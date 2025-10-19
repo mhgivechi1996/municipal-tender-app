@@ -1,5 +1,5 @@
 import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -13,6 +13,8 @@ import {
   ColDef,
   GridApi,
   GridReadyEvent,
+  IDateFilterParams,
+  INumberFilterParams,
   ModuleRegistry,
   ValueFormatterParams,
   ValueGetterParams
@@ -34,60 +36,149 @@ import { TenderSignalService } from '../../services/TenderSignalService';
   styleUrl: './tender-offers.component.css'
 })
 export class AdminTenderOffersComponent implements OnInit {
-  readonly defaultColumnDefs: ColDef = {
+  readonly numberFormatter = (params: ValueFormatterParams): string => {
+    const value = params.value;
+    return value != null && value !== ''
+      ? Number(value).toLocaleString('fa-IR')
+      : '';
+  };
+
+  readonly dateFormatter = (params: ValueFormatterParams): string => {
+    if (!params.value) {
+      return '';
+    }
+    const date =
+      params.value instanceof Date ? params.value : new Date(params.value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+    return date.toLocaleDateString('fa-IR');
+  };
+
+  private readonly dateComparator = (
+    filterLocalDateAtMidnight: Date,
+    cellValue?: Date | string | null
+  ): number => {
+    if (!cellValue) {
+      return -1;
+    }
+    const cellDate =
+      cellValue instanceof Date ? cellValue : new Date(cellValue);
+    if (Number.isNaN(cellDate.getTime())) {
+      return -1;
+    }
+    const cellTime = new Date(
+      cellDate.getFullYear(),
+      cellDate.getMonth(),
+      cellDate.getDate()
+    ).getTime();
+    const filterTime = filterLocalDateAtMidnight.getTime();
+    if (cellTime === filterTime) {
+      return 0;
+    }
+    return cellTime < filterTime ? -1 : 1;
+  };
+
+  readonly dateFilterParams: IDateFilterParams = {
+    comparator: this.dateComparator,
+    browserDatePicker: true,
+    buttons: ['clear']
+  };
+
+  readonly numberFilterParams: INumberFilterParams = {
+    buttons: ['clear']
+  };
+
+  readonly defaultColumnDefs: ColDef<ObjTenderOffers> = {
     flex: 1,
     minWidth: 140,
     sortable: true,
     filter: true,
-    resizable: true
+    floatingFilter: true,
+    resizable: true,
+    suppressHeaderMenuButton: true
   };
 
-  readonly columnDefs: ColDef[] = [
-    { headerName: 'شناسه', field: 'Id', maxWidth: 120 },
-    { headerName: 'عنوان', field: 'Title' },
-    { headerName: 'توضیحات', field: 'Description' },
+  readonly columnDefs: ColDef<ObjTenderOffers>[] = [
+    {
+      headerName: 'شناسه',
+      field: 'Id',
+      maxWidth: 110,
+      filter: 'agNumberColumnFilter'
+    },
+    {
+      headerName: 'عنوان',
+      field: 'Title',
+      filter: 'agTextColumnFilter',
+      minWidth: 220
+    },
+    {
+      headerName: 'توضیحات',
+      field: 'Description',
+      filter: 'agTextColumnFilter',
+      minWidth: 260
+    },
     {
       headerName: 'تاریخ شروع',
-      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) =>
-        params.data?.BeginDate ? new Date(params.data.BeginDate).toISOString().split('T')[0] : ''
+      field: 'BeginDate',
+      filter: 'agDateColumnFilter',
+      filterParams: this.dateFilterParams,
+      minWidth: 170,
+      valueFormatter: this.dateFormatter
     },
     {
       headerName: 'تاریخ پایان',
-      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) =>
-        params.data?.EndDate ? new Date(params.data.EndDate).toISOString().split('T')[0] : ''
+      field: 'EndDate',
+      filter: 'agDateColumnFilter',
+      filterParams: this.dateFilterParams,
+      minWidth: 170,
+      valueFormatter: this.dateFormatter
     },
     {
       headerName: 'حداقل قیمت',
-      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.FromPrice ?? null,
-      valueFormatter: (params: ValueFormatterParams) =>
-        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+      field: 'FromPrice',
+      filter: 'agNumberColumnFilter',
+      filterParams: this.numberFilterParams,
+      minWidth: 160,
+      valueFormatter: this.numberFormatter
     },
     {
       headerName: 'حداکثر قیمت',
-      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.ToPrice ?? null,
-      valueFormatter: (params: ValueFormatterParams) =>
-        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+      field: 'ToPrice',
+      filter: 'agNumberColumnFilter',
+      filterParams: this.numberFilterParams,
+      minWidth: 160,
+      valueFormatter: this.numberFormatter
     },
     {
       headerName: 'کمترین قیمت پیشنهادی',
-      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.Report?.MinPriceOffer ?? null,
-      valueFormatter: (params: ValueFormatterParams) =>
-        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+      colId: 'MinPriceOffer',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) =>
+        params.data?.Report?.MinPriceOffer ?? null,
+      filter: 'agNumberColumnFilter',
+      filterParams: this.numberFilterParams,
+      minWidth: 200,
+      valueFormatter: this.numberFormatter
     },
     {
       headerName: 'تعداد شرکت‌کنندگان',
-      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) => params.data?.Report?.UsersCount ?? null,
-      valueFormatter: (params: ValueFormatterParams) =>
-        params.value != null ? Number(params.value).toLocaleString('fa-IR') : ''
+      colId: 'UsersCount',
+      valueGetter: (params: ValueGetterParams<ObjTenderOffers>) =>
+        params.data?.Report?.UsersCount ?? null,
+      filter: 'agNumberColumnFilter',
+      filterParams: this.numberFilterParams,
+      minWidth: 190,
+      valueFormatter: this.numberFormatter
     },
     {
       headerName: 'عملیات',
-      field: 'actions',
+      colId: 'actions',
       sortable: false,
       filter: false,
+      floatingFilter: false,
       menuTabs: [],
       suppressHeaderContextMenu: true,
-      minWidth: 240,
+      minWidth: 260,
       cellRenderer: () => `
         <div class="grid-actions">
           <button type="button" class="action-button action-edit">ویرایش</button>
@@ -102,8 +193,11 @@ export class AdminTenderOffersComponent implements OnInit {
   loading = false;
   includeExpired = true;
 
-  private gridApi: GridApi | null = null;
+  private gridApi: GridApi<ObjTenderOffers> | null = null;
   private readonly fetchPageSize = 500;
+  private readonly maxFutureDateForFilter = '2100-12-31';
+  private readonly oneBillion = 1_000_000_000;
+  private readonly fiveBillion = 5_000_000_000;
 
   isEditModalVisible = false;
 
@@ -129,7 +223,7 @@ export class AdminTenderOffersComponent implements OnInit {
     this.loadTenderOffers();
   }
 
-  onGridReady(event: GridReadyEvent): void {
+  onGridReady(event: GridReadyEvent<ObjTenderOffers>): void {
     const gridApi = event.api;
     gridApi.setGridOption('domLayout', 'autoHeight');
     this.gridApi = gridApi;
@@ -143,7 +237,7 @@ export class AdminTenderOffersComponent implements OnInit {
   }
 
   onCellClicked(event: CellClickedEvent): void {
-    if (event.colDef.field !== 'actions' || !event.data) {
+    if ((event.colDef.colId ?? event.colDef.field) !== 'actions' || !event.data) {
       return;
     }
 
@@ -169,6 +263,110 @@ export class AdminTenderOffersComponent implements OnInit {
         this.deleteRow(event.data.Id);
       }
     }
+  }
+
+  clearAllFilters(): void {
+    if (!this.gridApi) {
+      return;
+    }
+    this.gridApi.setFilterModel(null);
+    this.gridApi.onFilterChanged();
+  }
+
+  filterActiveTenders(): void {
+    const today = new Date();
+    this.setColumnFilterModel('EndDate', {
+      type: 'inRange',
+      dateFrom: this.formatDateForFilter(today),
+      dateTo: this.maxFutureDateForFilter
+    });
+  }
+
+  filterEndingSoon(): void {
+    const today = new Date();
+    const inSevenDays = new Date(today);
+    inSevenDays.setDate(inSevenDays.getDate() + 7);
+    this.setColumnFilterModel('EndDate', {
+      type: 'inRange',
+      dateFrom: this.formatDateForFilter(today),
+      dateTo: this.formatDateForFilter(inSevenDays)
+    });
+  }
+
+  filterRecentlyStarted(): void {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    this.setColumnFilterModel('BeginDate', {
+      type: 'greaterThan',
+      dateFrom: this.formatDateForFilter(sevenDaysAgo)
+    });
+  }
+
+  clearDateFilters(): void {
+    this.setColumnFilterModel('BeginDate', null);
+    this.setColumnFilterModel('EndDate', null);
+  }
+
+  filterHighBudget(): void {
+    this.setColumnFilterModel('ToPrice', {
+      type: 'greaterThanOrEqual',
+      filter: this.fiveBillion
+    });
+  }
+
+  filterMidBudget(): void {
+    this.setColumnFilterModel('ToPrice', {
+      type: 'inRange',
+      filter: this.oneBillion,
+      filterTo: this.fiveBillion
+    });
+  }
+
+  filterLowBudget(): void {
+    this.setColumnFilterModel('ToPrice', {
+      type: 'lessThan',
+      filter: this.oneBillion
+    });
+  }
+
+  clearBudgetFilters(): void {
+    this.setColumnFilterModel('FromPrice', null);
+    this.setColumnFilterModel('ToPrice', null);
+    this.setColumnFilterModel('MinPriceOffer', null);
+  }
+
+  filterHasParticipants(): void {
+    this.setColumnFilterModel('UsersCount', {
+      type: 'greaterThan',
+      filter: 0
+    });
+  }
+
+  filterNoParticipants(): void {
+    this.setColumnFilterModel('UsersCount', {
+      type: 'equals',
+      filter: 0
+    });
+  }
+
+  clearParticipationFilter(): void {
+    this.setColumnFilterModel('UsersCount', null);
+  }
+
+  private setColumnFilterModel(columnKey: string, model: any | null): void {
+    if (!this.gridApi) {
+      return;
+    }
+    void this.gridApi
+      .setColumnFilterModel(columnKey, model)
+      .then(() => this.gridApi?.onFilterChanged());
+  }
+
+  private formatDateForFilter(date: Date): string {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   toggleIncludeExpired(value: boolean): void {
