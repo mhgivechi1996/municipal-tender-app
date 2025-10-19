@@ -36,6 +36,7 @@ import { TenderSignalService } from '../../services/TenderSignalService';
   styleUrl: './tender-offers.component.css'
 })
 export class AdminTenderOffersComponent implements OnInit {
+  filtersExpanded = true;
   readonly numberFormatter = (params: ValueFormatterParams): string => {
     const value = params.value;
     return value != null && value !== ''
@@ -221,6 +222,12 @@ export class AdminTenderOffersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTenderOffers();
+  }
+
+  onToggleFilters(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.filtersExpanded = !this.filtersExpanded;
   }
 
   onGridReady(event: GridReadyEvent<ObjTenderOffers>): void {

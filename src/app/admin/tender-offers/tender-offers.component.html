@@ -10,39 +10,60 @@
     </div>
   </div>
 
-  <div class="floating-filter-layout">
-    <div class="floating-filter-toolbar">
-      <div class="button-group">
-        <button class="toolbar-button" type="button" (click)="filterActiveTenders()">مناقصه‌های فعال</button>
-        <button class="toolbar-button" type="button" (click)="filterEndingSoon()">
-          رو به اتمام
-          <span class="button-note">(۷ روز آینده)</span>
-        </button>
-        <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته اخیر</button>
-        <button class="toolbar-button link" type="button" (click)="clearDateFilters()">حذف فیلتر تاریخ</button>
+  <nz-collapse class="filter-collapse" nzGhost [nzBordered]="false">
+    <nz-collapse-panel
+      class="filter-collapse-panel"
+      [(nzActive)]="filtersExpanded"
+      [nzShowArrow]="false"
+      [nzHeader]="filtersHeader"
+    >
+      <div class="floating-filter-layout">
+        <div class="floating-filter-toolbar">
+          <div class="button-group">
+            <button class="toolbar-button" type="button" (click)="filterActiveTenders()">مناقصه‌های فعال</button>
+            <button class="toolbar-button" type="button" (click)="filterEndingSoon()">
+              رو به اتمام
+              <span class="button-note">(۷ روز آینده)</span>
+            </button>
+            <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته اخیر</button>
+            <button class="toolbar-button link" type="button" (click)="clearDateFilters()">حذف فیلتر تاریخ</button>
+          </div>
+          <div class="button-group">
+            <button class="toolbar-button" type="button" (click)="filterHighBudget()">
+              بودجه بالا
+              <span class="button-note">(+۵ میلیارد)</span>
+            </button>
+            <button class="toolbar-button" type="button" (click)="filterMidBudget()">
+              بودجه متوسط
+              <span class="button-note">(۱ تا ۵ میلیارد)</span>
+            </button>
+            <button class="toolbar-button" type="button" (click)="filterLowBudget()">بودجه زیر ۱ میلیارد</button>
+            <button class="toolbar-button link" type="button" (click)="clearBudgetFilters()">حذف فیلتر مبلغ</button>
+          </div>
+          <div class="button-group">
+            <button class="toolbar-button" type="button" (click)="filterHasParticipants()">با شرکت‌کننده</button>
+            <button class="toolbar-button" type="button" (click)="filterNoParticipants()">بدون شرکت‌کننده</button>
+            <button class="toolbar-button link" type="button" (click)="clearParticipationFilter()">حذف فیلتر مشارکت</button>
+          </div>
+          <div class="button-group">
+            <button class="toolbar-button primary" type="button" (click)="clearAllFilters()">بازنشانی همه فیلترها</button>
+          </div>
+        </div>
       </div>
-      <div class="button-group">
-        <button class="toolbar-button" type="button" (click)="filterHighBudget()">
-          بودجه بالا
-          <span class="button-note">(+۵ میلیارد)</span>
-        </button>
-        <button class="toolbar-button" type="button" (click)="filterMidBudget()">
-          بودجه متوسط
-          <span class="button-note">(۱ تا ۵ میلیارد)</span>
-        </button>
-        <button class="toolbar-button" type="button" (click)="filterLowBudget()">بودجه زیر ۱ میلیارد</button>
-        <button class="toolbar-button link" type="button" (click)="clearBudgetFilters()">حذف فیلتر مبلغ</button>
+    </nz-collapse-panel>
+  </nz-collapse>
+  <ng-template #filtersHeader>
+    <div class="filters-header">
+      <div class="filters-header-title">
+        <span nz-icon nzType="filter"></span>
+        <span>فیلترهای پیشرفته</span>
       </div>
-      <div class="button-group">
-        <button class="toolbar-button" type="button" (click)="filterHasParticipants()">با شرکت‌کننده</button>
-        <button class="toolbar-button" type="button" (click)="filterNoParticipants()">بدون شرکت‌کننده</button>
-        <button class="toolbar-button link" type="button" (click)="clearParticipationFilter()">حذف فیلتر مشارکت</button>
-      </div>
-      <div class="button-group">
-        <button class="toolbar-button primary" type="button" (click)="clearAllFilters()">بازنشانی همه فیلترها</button>
-      </div>
+      <button nz-button nzType="link" class="filters-toggle" (click)="onToggleFilters($event)">
+        {{ filtersExpanded ? 'بستن فیلترها' : 'باز کردن فیلترها' }}
+        <span nz-icon [nzType]="filtersExpanded ? 'up' : 'down'"></span>
+      </button>
     </div>
-  </div>
+  </ng-template>
 
   <div class="grid-card">
     <div class="grid-wrapper">
