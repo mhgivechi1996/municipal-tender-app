@@ -1,44 +1,46 @@
-﻿<div class="page-header">
-  <h1 class="pageName">مدیریت مناقصه‌ها</h1>
-  <div class="actionBar">
-    <label class="include-expired-toggle">
-      <span>نمایش مناقصه‌های منقضی‌شده</span>
-      <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired($event)"></nz-switch>
-    </label>
-    <button nz-button nzType="primary" (click)="addRow()">افزودن مناقصه جدید</button>
+﻿<div class="tender-page-card">
+  <div class="page-header">
+    <h1 class="pageName">مدیریت مناقصه‌ها</h1>
+    <div class="actionBar">
+      <label class="include-expired-toggle">
+        <span>نمایش مناقصه‌های منقضی‌شده</span>
+        <nz-switch [ngModel]="includeExpired" (ngModelChange)="toggleIncludeExpired($event)"></nz-switch>
+      </label>
+      <button nz-button nzType="primary" (click)="addRow()">افزودن مناقصه جدید</button>
+    </div>
   </div>
-</div>
 
-<div class="floating-filter-layout">
-  <div class="floating-filter-toolbar">
-    <div class="button-group">
-      <button class="toolbar-button" type="button" (click)="filterActiveTenders()">مناقصه‌های فعال</button>
-      <button class="toolbar-button" type="button" (click)="filterEndingSoon()">
-        رو به اتمام
-        <span class="button-note">(۷ روز آینده)</span>
-      </button>
-      <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته اخیر</button>
-      <button class="toolbar-button link" type="button" (click)="clearDateFilters()">حذف فیلتر تاریخ</button>
-    </div>
-    <div class="button-group">
-      <button class="toolbar-button" type="button" (click)="filterHighBudget()">
-        بودجه بالا
-        <span class="button-note">(+۵ میلیارد)</span>
-      </button>
-      <button class="toolbar-button" type="button" (click)="filterMidBudget()">
-        بودجه متوسط
-        <span class="button-note">(۱ تا ۵ میلیارد)</span>
-      </button>
-      <button class="toolbar-button" type="button" (click)="filterLowBudget()">بودجه زیر ۱ میلیارد</button>
-      <button class="toolbar-button link" type="button" (click)="clearBudgetFilters()">حذف فیلتر مبلغ</button>
-    </div>
-    <div class="button-group">
-      <button class="toolbar-button" type="button" (click)="filterHasParticipants()">با شرکت‌کننده</button>
-      <button class="toolbar-button" type="button" (click)="filterNoParticipants()">بدون شرکت‌کننده</button>
-      <button class="toolbar-button link" type="button" (click)="clearParticipationFilter()">حذف فیلتر مشارکت</button>
-    </div>
-    <div class="button-group">
-      <button class="toolbar-button primary" type="button" (click)="clearAllFilters()">بازنشانی همه فیلترها</button>
+  <div class="floating-filter-layout">
+    <div class="floating-filter-toolbar">
+      <div class="button-group">
+        <button class="toolbar-button" type="button" (click)="filterActiveTenders()">مناقصه‌های فعال</button>
+        <button class="toolbar-button" type="button" (click)="filterEndingSoon()">
+          رو به اتمام
+          <span class="button-note">(۷ روز آینده)</span>
+        </button>
+        <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته اخیر</button>
+        <button class="toolbar-button link" type="button" (click)="clearDateFilters()">حذف فیلتر تاریخ</button>
+      </div>
+      <div class="button-group">
+        <button class="toolbar-button" type="button" (click)="filterHighBudget()">
+          بودجه بالا
+          <span class="button-note">(+۵ میلیارد)</span>
+        </button>
+        <button class="toolbar-button" type="button" (click)="filterMidBudget()">
+          بودجه متوسط
+          <span class="button-note">(۱ تا ۵ میلیارد)</span>
+        </button>
+        <button class="toolbar-button" type="button" (click)="filterLowBudget()">بودجه زیر ۱ میلیارد</button>
+        <button class="toolbar-button link" type="button" (click)="clearBudgetFilters()">حذف فیلتر مبلغ</button>
+      </div>
+      <div class="button-group">
+        <button class="toolbar-button" type="button" (click)="filterHasParticipants()">با شرکت‌کننده</button>
+        <button class="toolbar-button" type="button" (click)="filterNoParticipants()">بدون شرکت‌کننده</button>
+        <button class="toolbar-button link" type="button" (click)="clearParticipationFilter()">حذف فیلتر مشارکت</button>
+      </div>
+      <div class="button-group">
+        <button class="toolbar-button primary" type="button" (click)="clearAllFilters()">بازنشانی همه فیلترها</button>
+      </div>
     </div>
   </div>
 
