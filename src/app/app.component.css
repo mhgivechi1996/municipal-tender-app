@@ -1,49 +1,79 @@
 .trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
 
-  .trigger:hover {
-    color: #1890ff;
-  }
+.trigger:hover {
+  color: #1890ff;
+}
 
-  .logo {
-    height: 32px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 16px;
-    color: #fff;
-    line-height: 32px;
-    padding: 0px 2px;
-  }
-  
-  .ant-layout{
-    height: 100vh;
-  }
+.logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+  color: #fff;
+  line-height: 32px;
+  padding: 0 2px;
+  border-radius: 6px;
+}
 
-  nz-header {
-    background: #fff;
-    padding: 0;
-  }
+.app-shell {
+  min-height: 100vh;
+}
 
-  nz-content {
-    margin: 16px 16px 0px 16px;
-  }
+.app-content-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f7fb;
+}
 
-  nz-breadcrumb {
-    margin: 16px 0;
-  }
+.app-sider {
+  min-height: 100vh;
+}
 
-  .inner-content {    
-    background: #fff;
-    min-height: 100%;
-  }
+nz-header {
+  background: #fff;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-  nz-footer {
-    text-align: center;
-  }.menu-stat {
+nz-content {
+  margin: 16px;
+  flex: 1;
+  display: block;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+.inner-content {
+  background: transparent;
+  min-height: calc(100% - 32px);
+  padding: 24px 0 40px;
+  display: block;
+}
+
+.inner-content > * {
+  width: 100%;
+  max-width: none;
+  margin-inline: 24px;
+}
+
+nz-footer {
+  text-align: center;
+  background: #f5f7fb;
+  padding: 12px 0;
+}
+
+.menu-stat {
   font-size: 12px;
   margin-inline-start: 4px;
 }

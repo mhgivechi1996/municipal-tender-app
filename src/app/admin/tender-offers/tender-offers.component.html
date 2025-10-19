@@ -13,13 +13,22 @@
   <div class="floating-filter-toolbar">
     <div class="button-group">
       <button class="toolbar-button" type="button" (click)="filterActiveTenders()">مناقصه‌های فعال</button>
-      <button class="toolbar-button" type="button" (click)="filterEndingSoon()">رو به اتمام (۷ روز آینده)</button>
+      <button class="toolbar-button" type="button" (click)="filterEndingSoon()">
+        رو به اتمام
+        <span class="button-note">(۷ روز آینده)</span>
+      </button>
       <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته اخیر</button>
       <button class="toolbar-button link" type="button" (click)="clearDateFilters()">حذف فیلتر تاریخ</button>
     </div>
     <div class="button-group">
-      <button class="toolbar-button" type="button" (click)="filterHighBudget()">بودجه بالا (+۵ میلیارد)</button>
-      <button class="toolbar-button" type="button" (click)="filterMidBudget()">بودجه متوسط (۱ تا ۵ میلیارد)</button>
+      <button class="toolbar-button" type="button" (click)="filterHighBudget()">
+        بودجه بالا
+        <span class="button-note">(+۵ میلیارد)</span>
+      </button>
+      <button class="toolbar-button" type="button" (click)="filterMidBudget()">
+        بودجه متوسط
+        <span class="button-note">(۱ تا ۵ میلیارد)</span>
+      </button>
       <button class="toolbar-button" type="button" (click)="filterLowBudget()">بودجه زیر ۱ میلیارد</button>
       <button class="toolbar-button link" type="button" (click)="clearBudgetFilters()">حذف فیلتر مبلغ</button>
     </div>
@@ -33,16 +42,18 @@
     </div>
   </div>
 
-  <div class="grid-wrapper">
-    <ag-grid-angular
-      class="ag-theme-quartz tender-grid"
-      [theme]="'legacy'"
-      [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColumnDefs"
-      [rowData]="rowData"
-      (gridReady)="onGridReady($event)"
-      (cellClicked)="onCellClicked($event)"
-    ></ag-grid-angular>
+  <div class="grid-card">
+    <div class="grid-wrapper">
+      <ag-grid-angular
+        class="ag-theme-quartz tender-grid"
+        [theme]="'legacy'"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColumnDefs"
+        [rowData]="rowData"
+        (gridReady)="onGridReady($event)"
+        (cellClicked)="onCellClicked($event)"
+      ></ag-grid-angular>
+    </div>
   </div>
 </div>
 

@@ -1,6 +1,13 @@
 ﻿<div *ngIf="userLogin">
-  <nz-layout dir="rtl">
-    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" [nzWidth]="260" [nzCollapsedWidth]="64">
+  <nz-layout dir="rtl" class="app-shell">
+    <nz-sider
+      class="app-sider"
+      nzCollapsible
+      [(nzCollapsed)]="isCollapsed"
+      [nzTrigger]="null"
+      [nzWidth]="260"
+      [nzCollapsedWidth]="64"
+    >
       <div class="logo">{{ userLogin ? currentUser.User.Username : '' }}</div>
       <ul nz-menu nzTheme="dark" nzMode="inline">
         <li nz-menu-item routerLink="/">
@@ -33,7 +40,7 @@
         </li>
       </ul>
     </nz-sider>
-    <nz-layout>
+    <nz-layout class="app-content-layout">
       <nz-header>
         <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
           (click)="isCollapsed = !isCollapsed"></span>
