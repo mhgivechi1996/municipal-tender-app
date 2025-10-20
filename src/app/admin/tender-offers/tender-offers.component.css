@@ -222,20 +222,21 @@
   background: rgba(24, 144, 255, 0.1);
 }
 
-.grid-actions {
+/* .grid-actions {
   display: flex;
   gap: 8px;
   justify-content: center;
+} */
+
+/* .grid-actions .action-button {
+  min-width: 92px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.grid-actions .action-button {
-  background: none;
-  border: none;
-  color: #1890ff;
-  cursor: pointer;
-  padding: 0;
-}
-
-.grid-actions .action-button:hover {
-  text-decoration: underline;
-}
+.grid-actions .action-button span {
+  width: 100%;
+} */

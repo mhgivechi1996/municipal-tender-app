@@ -182,9 +182,15 @@ export class AdminTenderOffersComponent implements OnInit {
       minWidth: 260,
       cellRenderer: () => `
         <div class="grid-actions">
-          <button type="button" class="action-button action-edit">ویرایش</button>
-          <button type="button" class="action-button action-report">گزارش</button>
-          <button type="button" class="action-button action-delete">حذف</button>
+          <button class="ant-btn ant-btn-round ant-btn-default action-button action-edit">
+            <span>ویرایش</span>
+          </button>
+          <button class="ant-btn ant-btn-round ant-btn-primary action-button action-report">
+            <span>گزارش</span>
+          </button>
+          <button class="ant-btn ant-btn-round ant-btn-default ant-btn-dangerous action-button action-delete">
+            <span>حذف</span>
+          </button>
         </div>
       `
     }
