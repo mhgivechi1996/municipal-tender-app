@@ -36,7 +36,7 @@ import { TenderSignalService } from '../../services/TenderSignalService';
   styleUrl: './tender-offers.component.css'
 })
 export class AdminTenderOffersComponent implements OnInit {
-  filtersExpanded = true;
+  filtersExpanded = false;
   readonly numberFormatter = (params: ValueFormatterParams): string => {
     const value = params.value;
     return value != null && value !== ''
