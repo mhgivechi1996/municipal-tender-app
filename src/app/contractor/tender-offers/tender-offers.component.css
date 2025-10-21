@@ -1,0 +1,114 @@
+.tender-page-card {
+  width: 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+  border-radius: 28px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+  padding: 12px min(4vw, 40px) 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.grid-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grid-wrapper {
+  width: 100%;
+  min-height: 420px;
+}
+
+.grid-pagination {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ag-theme-quartz.tender-grid {
+  width: 100%;
+  height: 100%;
+  direction: rtl;
+  border-radius: 12px;
+  --ag-header-text-align: right;
+  --ag-font-size: 13px;
+  --ag-border-radius: 12px;
+  --ag-header-height: 54px;
+  --ag-header-foreground-color: #1f2937;
+  --ag-header-background-color: #f9fafb;
+  --ag-floating-filter-height: 46px;
+  --ag-background-color: transparent;
+  --ag-odd-row-background-color: #ffffff;
+  --ag-even-row-background-color: #f7f9fc;
+  --ag-foreground-color: #1f2937;
+  --ag-secondary-border-color: #e5e7eb;
+  --ag-row-border-style: solid;
+  --ag-row-border-color: #e5e7eb;
+  --ag-border-color: transparent;
+  --ag-input-border-color: #d0d5dd;
+  --ag-input-border-radius: 10px;
+  --ag-input-focus-border-color: #1890ff;
+  --ag-card-radius: 12px;
+  --ag-wrapper-border-radius: 12px;
+  --ag-row-height: 46px;
+  --ag-grid-size: 6px;
+  --ag-cell-horizontal-padding: 14px;
+  --ag-font-family: 'IRANSans', 'Vazirmatn', 'Segoe UI', sans-serif;
+  --ag-header-column-separator-display: block;
+  --ag-header-column-separator-height: 60%;
+  --ag-header-column-separator-width: 1px;
+  --ag-header-column-separator-color: rgba(15, 23, 42, 0.08);
+}
+
+.ag-theme-quartz.tender-grid .ag-header {
+  box-shadow: inset 0 -1px 0 rgba(15, 23, 42, 0.08);
+}
+
+.ag-theme-quartz.tender-grid .ag-header-cell-label {
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.ag-theme-quartz.tender-grid .ag-cell {
+  text-align: right;
+}
+
+.ag-theme-quartz.tender-grid .ag-floating-filter input {
+  text-align: right;
+}
+
+.grid-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.grid-actions .action-button {
+  min-width: 110px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-description {
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.form-error {
+  color: #ff4d4f;
+  margin-top: 8px;
+  font-size: 12px;
+}

@@ -1,55 +1,43 @@
-<div class="page-header">
-  <h1 class="pageName">مناقصه های باز</h1>
-</div>
+<div class="tender-page-card">
+  <div class="page-header">
+    <h1 class="pageName">مناقصات فعال</h1>
+  </div>
 
-<nz-table
-  nzShowSizeChanger
-  [nzData]="list"
-  [nzFrontPagination]="false"
-  [nzLoading]="loading"
-  [nzTotal]="total"
-  [nzPageSize]="pageSize"
-  [nzPageIndex]="pageIndex"
-  (nzQueryParams)="onQueryParamsChange($event)"
->
-  <thead>
-    <tr>
-      <th>عملیات</th>
-      <th nzColumnKey="Id" [nzSortFn]="true">شناسه</th>
-      <th nzColumnKey="Title">عنوان</th>
-      <th nzColumnKey="Description">توضیحات</th>
-      <th nzColumnKey="BeginDate">تاریخ شروع</th>
-      <th nzColumnKey="EndDate">تاریخ پایان</th>
-      <th nzColumnKey="FromPrice">حداقل قیمت</th>
-      <th nzColumnKey="ToPrice">حداکثر قیمت</th>
-      <th nzColumnKey="MinPriceOffer">کمترین پیشنهاد</th>
-      <th nzColumnKey="UsersCount">تعداد شرکت کنندگان</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of list">
-      <td class="actions">
-        <a (click)="openOfferModal(data)">Submit offer</a>
-      </td>
-      <td>{{ data.Id }}</td>
-      <td>{{ data.Title }}</td>
-      <td>{{ data.Description }}</td>
-      <td>{{ data.BeginDate | date: 'yyyy-MM-dd' }}</td>
-      <td>{{ data.EndDate | date: 'yyyy-MM-dd' }}</td>
-      <td>{{ data.FromPrice | number }}</td>
-      <td>{{ data.ToPrice | number }}</td>
-      <td>{{ data.Report.MinPriceOffer | number }}</td>
-      <td>{{ data.Report.UsersCount | number }}</td>
-    </tr>
-  </tbody>
-</nz-table>
+  <div class="grid-card">
+    <div class="grid-wrapper">
+      <ag-grid-angular
+        class="ag-theme-quartz tender-grid"
+        [theme]="'legacy'"
+        [enableRtl]="true"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColumnDefs"
+        [rowData]="rowData"
+        [pagination]="false"
+        (gridReady)="onGridReady($event)"
+        (cellClicked)="onCellClicked($event)"
+        [loadingOverlayComponentParams]="{ loadingMessage: 'در حال بارگذاری...' }"
+      ></ag-grid-angular>
+    </div>
+    <nz-pagination
+      class="grid-pagination"
+      [nzPageIndex]="pageIndex"
+      [nzTotal]="total"
+      [nzPageSize]="pageSize"
+      [nzPageSizeOptions]="[10, 20, 50]"
+      [nzShowSizeChanger]="true"
+      [nzDisabled]="loading"
+      (nzPageIndexChange)="onPageIndexChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)"
+    ></nz-pagination>
+  </div>
+</div>
 
 <form nz-form [formGroup]="validateForm">
   <nz-modal
     [(nzVisible)]="isOfferModalVisible"
-    nzTitle="Submit your offer"
-    nzOkText="Send"
-    nzCancelText="Cancel"
+    nzTitle="ثبت پیشنهاد"
+    nzOkText="ارسال"
+    nzCancelText="انصراف"
     (nzOnOk)="submitOffer()"
     (nzOnCancel)="isOfferModalVisible = false"
     nzDirection="rtl"
@@ -57,11 +45,11 @@
     <ng-container *nzModalContent>
       <ng-container *ngIf="selectedTender as tender">
         <p class="modal-description">
-          {{ tender.Title }} بازه مجاز قیمت:
-          {{ tender.FromPrice | number }} - {{ tender.ToPrice | number }}
+          {{ tender.Title }} — بازه مجاز:
+          {{ tender.FromPrice | number }} تا {{ tender.ToPrice | number }}
         </p>
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>Your price</nz-form-label>
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>مبلغ پیشنهادی</nz-form-label>
           <nz-form-control [nzSm]="16" [nzXs]="24">
             <nz-input-number
               formControlName="PriceOffer"
@@ -71,7 +59,7 @@
               style="width: 200px"
             ></nz-input-number>
             <div class="form-error" *ngIf="validateForm.get('PriceOffer')?.invalid && validateForm.get('PriceOffer')?.dirty">
-              مبلغ را در بازه ی مجاز ثبت کنید.
+              مبلغ باید در بازه مجاز قرار داشته باشد.
             </div>
           </nz-form-control>
         </nz-form-item>

@@ -1,31 +1,39 @@
-﻿<div class="report-container">
-  <h1 class="pageName">گزارش مناقصه</h1>
-  <form nz-form [formGroup]="filterForm" (ngSubmit)="loadReport()" class="filter-form">
-    <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>مناقصه</nz-form-label>
-      <nz-form-control [nzSm]="18" [nzXs]="24">
-        <nz-select
-          formControlName="TenderId"
-          nzPlaceHolder="مناقصه را انتخاب کنید"
-          [nzLoading]="loadingTenders"
-          nzShowSearch
-          nzAllowClear
-        >
-          <nz-option
-            *ngFor="let tender of tenders"
-            [nzValue]="tender.Id"
-            [nzLabel]="tender.Title + ' (شناسه ' + tender.Id + ') '"
-          ></nz-option>
-        </nz-select>
-      </nz-form-control>
-    </nz-form-item>
-    <button nz-button nzType="primary" [disabled]="filterForm.invalid || loadingReport">نمایش گزارش</button>
-  </form>
+<div class="tender-page-card">
+  <div class="page-header">
+    <h1 class="pageName">گزارش مناقصه</h1>
+    <button nz-button nzType="primary" nzShape="round" nzSize="large" (click)="loadReport()" [disabled]="filterForm.invalid || loadingReport">
+      به‌روزرسانی گزارش
+    </button>
+  </div>
+
+  <div class="filter-card">
+    <form nz-form [formGroup]="filterForm" (ngSubmit)="loadReport()" class="filter-form">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>مناقصه</nz-form-label>
+        <nz-form-control [nzSm]="18" [nzXs]="24">
+          <nz-select
+            formControlName="TenderId"
+            nzPlaceHolder="انتخاب مناقصه..."
+            [nzLoading]="loadingTenders"
+            nzShowSearch
+            nzAllowClear
+          >
+            <nz-option
+              *ngFor="let tender of tenders"
+              [nzValue]="tender.Id"
+              [nzLabel]="tender.Title + ' (کد ' + tender.Id + ')' "
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button nzType="primary" nzShape="round" [disabled]="filterForm.invalid || loadingReport">مشاهده گزارش</button>
+    </form>
+  </div>
 
   <nz-card class="summary-card" *ngIf="report">
     <nz-card-meta
-      nzTitle="خلاصه مناقصه"
-      [nzDescription]="'تعداد شرکت‌کنندگان: ' + (report?.UsersCount ?? 0) + ' | کمترین قیمت: ' + (report?.MinPriceOffer ?? 0)"
+      nzTitle="خلاصه گزارش"
+      [nzDescription]="'تعداد شرکت‌کننده‌ها: ' + (report?.UsersCount ?? 0) + ' | کمترین پیشنهاد: ' + ((report?.MinPriceOffer ?? 0) | number)"
     ></nz-card-meta>
     <div class="winner" *ngIf="report?.Winner; else noWinner">
       <strong>برنده:</strong>
@@ -34,35 +42,28 @@
     </div>
     <ng-template #noWinner>
       <div class="winner">
-        <strong>برنده:</strong> هنوز مشخص نشده است
+        <strong>برنده:</strong> هنوز برنده‌ای تعیین نشده است.
       </div>
     </ng-template>
   </nz-card>
 
   <nz-skeleton *ngIf="loadingReport" [nzActive]="true"></nz-skeleton>
-  <nz-empty *ngIf="!loadingReport && !report" nzNotFoundContent="برای مشاهده گزارش مناقصه‌ای را انتخاب کنید"></nz-empty>
+  <nz-empty
+    *ngIf="!loadingReport && !report"
+    nzNotFoundContent="برای مشاهده اطلاعات، مناقصه را انتخاب و گزارش را مشاهده کنید."
+  ></nz-empty>
 
-  <nz-table
-    *ngIf="report && !loadingReport"
-    [nzData]="participants"
-    nzSize="middle"
-    nzTableLayout="fixed"
-  >
-    <thead>
-      <tr>
-        <th>شناسه پیشنهاد</th>
-        <th>پیمانکار</th>
-        <th>قیمت</th>
-        <th>تاریخ ثبت</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let participant of participants">
-        <td>{{ participant.OfferId }}</td>
-        <td>{{ participant.Username || ('پیمانکار شماره ' + participant.UserId) }}</td>
-        <td>{{ participant.PriceOffer | number }}</td>
-        <td>{{ participant.Date | date: 'yyyy-MM-dd HH:mm' }}</td>
-      </tr>
-    </tbody>
-  </nz-table>
+  <div class="grid-card" *ngIf="report">
+    <div class="grid-wrapper">
+      <ag-grid-angular
+        class="ag-theme-quartz tender-grid"
+        [theme]="'legacy'"
+        [enableRtl]="true"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColumnDefs"
+        [rowData]="participantsRowData"
+        (gridReady)="onGridReady($event)"
+      ></ag-grid-angular>
+    </div>
+  </div>
 </div>

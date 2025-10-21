@@ -222,13 +222,13 @@
   background: rgba(24, 144, 255, 0.1);
 }
 
-/* .grid-actions {
+.grid-actions {
   display: flex;
   gap: 8px;
   justify-content: center;
-} */
+}
 
-/* .grid-actions .action-button {
+.grid-actions .action-button {
   min-width: 92px;
   font-size: 12px;
   font-weight: 600;
@@ -237,6 +237,20 @@
   justify-content: center;
 }
 
+.grid-actions .action-button.action-edit {
+  border-color: #d0d5dd;
+  color: #1f2937;
+}
+
+.grid-actions .action-button.action-report {
+  border-color: #0f62fe;
+  color: #0f62fe;
+}
+
+.grid-actions .action-button.action-delete {
+  border-color: #ff4d4f;
+}
+
 .grid-actions .action-button span {
   width: 100%;
-} */
+}
