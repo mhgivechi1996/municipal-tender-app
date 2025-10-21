@@ -30,6 +30,7 @@ type GridActionRendererParams<TData> = ICellRendererParams<TData> & {
       <button
         *ngFor="let button of buttons"
         nz-button
+        nz-tooltip
         class="grid-action-button"
         [nzType]="button.nzType ?? 'default'"
         [nzShape]="button.nzShape ?? 'circle'"

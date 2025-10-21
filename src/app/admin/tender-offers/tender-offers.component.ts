@@ -37,9 +37,6 @@ import { GridActionButtonsRendererComponent } from '../../shared/grid-action-but
 })
 export class AdminTenderOffersComponent implements OnInit {
   filtersExpanded = false;
-  readonly frameworkComponents = {
-    actionButtonsRenderer: GridActionButtonsRendererComponent
-  };
   readonly numberFormatter = (params: ValueFormatterParams): string => {
     const value = params.value;
     return value != null && value !== ''
@@ -183,7 +180,7 @@ export class AdminTenderOffersComponent implements OnInit {
       menuTabs: [],
       suppressHeaderContextMenu: true,
       minWidth: 260,
-      cellRenderer: 'actionButtonsRenderer',
+      cellRenderer: GridActionButtonsRendererComponent,
       cellRendererParams: {
         buttons: [
           {

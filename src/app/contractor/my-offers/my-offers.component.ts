@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AgGridModule } from 'ag-grid-angular';
 import {
   AllCommunityModule,
+  CellClickedEvent,
   ColDef,
   GridApi,
   GridReadyEvent,
@@ -50,9 +51,6 @@ export class ContractorMyOffersComponent implements OnInit {
   loading = false;
   pageSize = 10;
   pageIndex = 1;
-  readonly frameworkComponents = {
-    actionButtonsRenderer: GridActionButtonsRendererComponent
-  };
 
   isEditModalVisible = false;
   selectedOffer: ObjOffers | null = null;
@@ -142,7 +140,7 @@ export class ContractorMyOffersComponent implements OnInit {
       menuTabs: [],
       suppressHeaderContextMenu: true,
       minWidth: 240,
-      cellRenderer: 'actionButtonsRenderer',
+      cellRenderer: GridActionButtonsRendererComponent,
       cellRendererParams: {
         buttons: [
           {

@@ -47,9 +47,6 @@ export class ContractorTenderOffersComponent implements OnInit {
   loading = false;
   pageSize = 10;
   pageIndex = 1;
-  readonly frameworkComponents = {
-    actionButtonsRenderer: GridActionButtonsRendererComponent
-  };
   private lastSortField: string | null = null;
   private lastSortOrder: string | null = null;
   private gridApi: GridApi<ObjTenderOffers> | null = null;
@@ -135,7 +132,7 @@ export class ContractorTenderOffersComponent implements OnInit {
       menuTabs: [],
       suppressHeaderContextMenu: true,
       minWidth: 200,
-      cellRenderer: 'actionButtonsRenderer',
+      cellRenderer: GridActionButtonsRendererComponent,
       cellRendererParams: {
         buttons: [
           {
