@@ -55,7 +55,7 @@
 .filters-header-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: 600;
 }
 
@@ -162,7 +162,7 @@
   --ag-header-text-align: right;
   --ag-font-size: 13px;
   --ag-border-radius: 12px;
-  --ag-header-height: 54px;
+  --ag-header-height: 56px;
   --ag-header-foreground-color: #1f2937;
   --ag-header-background-color: #f9fafb;
   --ag-floating-filter-height: 46px;
@@ -179,9 +179,10 @@
   --ag-input-focus-border-color: #1890ff;
   --ag-card-radius: 12px;
   --ag-wrapper-border-radius: 12px;
-  --ag-row-height: 46px;
+  --ag-row-height: 64px;
   --ag-grid-size: 6px;
   --ag-cell-horizontal-padding: 14px;
+  --ag-cell-vertical-padding: 12px;
   --ag-font-family: 'IRANSans', 'Vazirmatn', 'Segoe UI', sans-serif;
   --ag-header-column-separator-display: block;
   --ag-header-column-separator-height: 60%;
@@ -200,6 +201,9 @@
 }
 
 .ag-theme-quartz.tender-grid .ag-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   text-align: right;
 }
 
@@ -224,33 +228,35 @@
 
 .grid-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
-}
-
-.grid-actions .action-button {
-  min-width: 92px;
-  font-size: 12px;
-  font-weight: 600;
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
 }
 
-.grid-actions .action-button.action-edit {
-  border-color: #d0d5dd;
+.grid-actions .grid-action-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.grid-actions .grid-action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.grid-actions .grid-action-button.ant-btn-default:not(.ant-btn-dangerous) {
+  background-color: #f9fafb;
+  border-color: rgba(31, 41, 55, 0.18);
   color: #1f2937;
 }
 
-.grid-actions .action-button.action-report {
-  border-color: #0f62fe;
-  color: #0f62fe;
+.grid-actions .grid-action-button.ant-btn-primary {
+  box-shadow: 0 10px 24px rgba(24, 144, 255, 0.35);
 }
 
-.grid-actions .action-button.action-delete {
-  border-color: #ff4d4f;
-}
-
-.grid-actions .action-button span {
-  width: 100%;
+.grid-actions .grid-action-button.ant-btn-default.ant-btn-dangerous {
+  background-color: rgba(255, 77, 79, 0.12);
+  border-color: rgba(255, 77, 79, 0.5);
+  color: #ff4d4f;
 }

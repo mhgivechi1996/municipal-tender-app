@@ -9,7 +9,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { AgGridModule } from 'ag-grid-angular';
 import {
   AllCommunityModule,
-  CellClickedEvent,
   ColDef,
   GridApi,
   GridReadyEvent,
@@ -27,16 +26,20 @@ import { PageResponse } from '../../models/ApiResponses';
 import { ObjTenderOffers } from '../../models/ObjTenderOffers';
 import { AdminService } from '../../services/AdminService';
 import { TenderSignalService } from '../../services/TenderSignalService';
+import { GridActionButtonsRendererComponent } from '../../shared/grid-action-buttons/grid-action-buttons-renderer.component';
 
 @Component({
   selector: 'app-admin-tender-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule, AgGridModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule, AgGridModule, GridActionButtonsRendererComponent],
   templateUrl: './tender-offers.component.html',
   styleUrl: './tender-offers.component.css'
 })
 export class AdminTenderOffersComponent implements OnInit {
   filtersExpanded = false;
+  readonly frameworkComponents = {
+    actionButtonsRenderer: GridActionButtonsRendererComponent
+  };
   readonly numberFormatter = (params: ValueFormatterParams): string => {
     const value = params.value;
     return value != null && value !== ''
@@ -180,19 +183,44 @@ export class AdminTenderOffersComponent implements OnInit {
       menuTabs: [],
       suppressHeaderContextMenu: true,
       minWidth: 260,
-      cellRenderer: () => `
-        <div class="grid-actions">
-          <button class="ant-btn ant-btn-round ant-btn-default action-button action-edit">
-            <span>ویرایش</span>
-          </button>
-          <button class="ant-btn ant-btn-round ant-btn-primary action-button action-report">
-            <span>گزارش</span>
-          </button>
-          <button class="ant-btn ant-btn-round ant-btn-default ant-btn-dangerous action-button action-delete">
-            <span>حذف</span>
-          </button>
-        </div>
-      `
+      cellRenderer: 'actionButtonsRenderer',
+      cellRendererParams: {
+        buttons: [
+          {
+            icon: 'edit',
+            tooltip: 'ویرایش مناقصه',
+            ariaLabel: 'ویرایش',
+            nzType: 'primary',
+            onClick: (record: ObjTenderOffers | null) => {
+              if (record) {
+                this.editRow(record);
+              }
+            }
+          },
+          {
+            icon: 'file-text',
+            tooltip: 'گزارش مناقصه',
+            ariaLabel: 'گزارش',
+            nzType: 'default',
+            onClick: (record: ObjTenderOffers | null) => {
+              if (record) {
+                this.openReport(record.Id);
+              }
+            }
+          },
+          {
+            icon: 'delete',
+            tooltip: 'حذف مناقصه',
+            ariaLabel: 'حذف',
+            nzDanger: true,
+            onClick: (record: ObjTenderOffers | null) => {
+              if (record && confirm('آیا از حذف این مورد اطمینان دارید؟')) {
+                this.deleteRow(record.Id);
+              }
+            }
+          }
+        ]
+      }
     }
   ];
 
@@ -246,35 +274,6 @@ export class AdminTenderOffersComponent implements OnInit {
       gridApi.showNoRowsOverlay();
     } else {
       gridApi.hideOverlay();
-    }
-  }
-
-  onCellClicked(event: CellClickedEvent): void {
-    if ((event.colDef.colId ?? event.colDef.field) !== 'actions' || !event.data) {
-      return;
-    }
-
-    const domEvent = event.event;
-    if (!domEvent) {
-      return;
-    }
-
-    const target = domEvent.target instanceof HTMLElement ? domEvent.target : null;
-    const actionButton = target?.closest('.action-button') as HTMLElement | null;
-    if (!actionButton) {
-      return;
-    }
-
-    domEvent.preventDefault();
-    domEvent.stopPropagation();
-    if (actionButton.classList.contains('action-edit')) {
-      this.editRow(event.data);
-    } else if (actionButton.classList.contains('action-report')) {
-      this.openReport(event.data.Id);
-    } else if (actionButton.classList.contains('action-delete')) {
-      if (confirm('آیا از حذف این مورد اطمینان دارید؟')) {
-        this.deleteRow(event.data.Id);
-      }
     }
   }
 

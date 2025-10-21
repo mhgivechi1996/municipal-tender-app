@@ -8,7 +8,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AgGridModule } from 'ag-grid-angular';
 import {
   AllCommunityModule,
-  CellClickedEvent,
   ColDef,
   GridApi,
   GridReadyEvent,
@@ -25,13 +24,22 @@ import { ContractorService } from '../../services/ContractorService';
 import { ObjOffers } from '../../models/ObjOffers';
 import { ObjTenderOffers } from '../../models/ObjTenderOffers';
 import { PageResponse } from '../../models/ApiResponses';
+import { GridActionButtonsRendererComponent } from '../../shared/grid-action-buttons/grid-action-buttons-renderer.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-contractor-my-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule, AgGridModule, NzPaginationModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgZorroAntdModule,
+    AgGridModule,
+    NzPaginationModule,
+    GridActionButtonsRendererComponent
+  ],
   templateUrl: './my-offers.component.html',
   styleUrl: './my-offers.component.css'
 })
@@ -42,6 +50,9 @@ export class ContractorMyOffersComponent implements OnInit {
   loading = false;
   pageSize = 10;
   pageIndex = 1;
+  readonly frameworkComponents = {
+    actionButtonsRenderer: GridActionButtonsRendererComponent
+  };
 
   isEditModalVisible = false;
   selectedOffer: ObjOffers | null = null;
@@ -131,16 +142,33 @@ export class ContractorMyOffersComponent implements OnInit {
       menuTabs: [],
       suppressHeaderContextMenu: true,
       minWidth: 240,
-      cellRenderer: () => `
-        <div class="grid-actions">
-          <button class="ant-btn ant-btn-round ant-btn-default action-button action-edit">
-            <span>ویرایش پیشنهاد</span>
-          </button>
-          <button class="ant-btn ant-btn-round ant-btn-default ant-btn-dangerous action-button action-delete">
-            <span>حذف پیشنهاد</span>
-          </button>
-        </div>
-      `
+      cellRenderer: 'actionButtonsRenderer',
+      cellRendererParams: {
+        buttons: [
+          {
+            icon: 'edit',
+            tooltip: 'ویرایش پیشنهاد',
+            ariaLabel: 'ویرایش پیشنهاد',
+            nzType: 'primary',
+            onClick: (record: ObjOffers | null) => {
+              if (record) {
+                this.editRow(record);
+              }
+            }
+          },
+          {
+            icon: 'delete',
+            tooltip: 'حذف پیشنهاد',
+            ariaLabel: 'حذف پیشنهاد',
+            nzDanger: true,
+            onClick: (record: ObjOffers | null) => {
+              if (record) {
+                this.confirmDelete(record.Id);
+              }
+            }
+          }
+        ]
+      }
     }
   ];
 

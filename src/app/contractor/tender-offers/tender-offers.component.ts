@@ -7,7 +7,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AgGridModule } from 'ag-grid-angular';
 import {
   AllCommunityModule,
-  CellClickedEvent,
   ColDef,
   GridApi,
   GridReadyEvent,
@@ -22,13 +21,22 @@ import { NgZorroAntdModule } from '../../../Modules/ng-zorro-antd.module';
 import { PageResponse } from '../../models/ApiResponses';
 import { ObjTenderOffers } from '../../models/ObjTenderOffers';
 import { ContractorService } from '../../services/ContractorService';
+import { GridActionButtonsRendererComponent } from '../../shared/grid-action-buttons/grid-action-buttons-renderer.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-contractor-tender-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule, AgGridModule, NzPaginationModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgZorroAntdModule,
+    AgGridModule,
+    NzPaginationModule,
+    GridActionButtonsRendererComponent
+  ],
   templateUrl: './tender-offers.component.html',
   styleUrl: './tender-offers.component.css'
 })
@@ -39,6 +47,9 @@ export class ContractorTenderOffersComponent implements OnInit {
   loading = false;
   pageSize = 10;
   pageIndex = 1;
+  readonly frameworkComponents = {
+    actionButtonsRenderer: GridActionButtonsRendererComponent
+  };
   private lastSortField: string | null = null;
   private lastSortOrder: string | null = null;
   private gridApi: GridApi<ObjTenderOffers> | null = null;
@@ -124,13 +135,22 @@ export class ContractorTenderOffersComponent implements OnInit {
       menuTabs: [],
       suppressHeaderContextMenu: true,
       minWidth: 200,
-      cellRenderer: () => `
-        <div class="grid-actions">
-          <button class="ant-btn ant-btn-round ant-btn-primary action-button action-submit">
-            <span>ثبت پیشنهاد</span>
-          </button>
-        </div>
-      `
+      cellRenderer: 'actionButtonsRenderer',
+      cellRendererParams: {
+        buttons: [
+          {
+            icon: 'check',
+            tooltip: 'ثبت پیشنهاد',
+            ariaLabel: 'ثبت پیشنهاد',
+            nzType: 'primary',
+            onClick: (record: ObjTenderOffers | null) => {
+              if (record) {
+                this.openOfferModal(record);
+              }
+            }
+          }
+        ]
+      }
     }
   ];
 
@@ -198,22 +218,6 @@ export class ContractorTenderOffersComponent implements OnInit {
     if (!this.rowData.length) {
       event.api.showNoRowsOverlay();
     }
-  }
-
-  onCellClicked(event: CellClickedEvent<ObjTenderOffers>): void {
-    if ((event.colDef.colId ?? event.colDef.field) !== 'actions' || !event.data) {
-      return;
-    }
-
-    const target = event.event?.target instanceof HTMLElement ? event.event.target : null;
-    const button = target?.closest('button');
-    if (!button) {
-      return;
-    }
-
-    event.event?.preventDefault();
-    event.event?.stopPropagation();
-    this.openOfferModal(event.data);
   }
 
   onPageIndexChange(pageIndex: number): void {
