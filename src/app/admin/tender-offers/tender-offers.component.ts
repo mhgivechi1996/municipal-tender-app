@@ -1,4 +1,3 @@
-import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 import { CommonModule } from '@angular/common';
@@ -270,7 +269,6 @@ export class AdminTenderOffersComponent implements OnInit {
 
   onGridReady(event: GridReadyEvent<ObjTenderOffers>): void {
     const gridApi = event.api;
-    gridApi.setGridOption('domLayout', 'autoHeight');
     this.gridApi = gridApi;
     if (this.loading) {
       gridApi.showLoadingOverlay();

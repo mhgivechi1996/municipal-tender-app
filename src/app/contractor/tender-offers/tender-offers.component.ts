@@ -1,4 +1,3 @@
-import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 import { CommonModule } from '@angular/common';

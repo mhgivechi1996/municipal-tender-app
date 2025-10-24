@@ -48,7 +48,7 @@
   border-color: rgba(6, 95, 70, 0.5);
 }
 
-.grid-wrapper {
+.advanced-grid-wrapper {
   width: 100%;
   min-height: 420px;
   border-radius: 16px;
@@ -58,7 +58,8 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-.advanced-grid {
+.advanced-grid,
+.advanced-grid-wrapper .advanced-grid {
   width: 100%;
   height: 100%;
   direction: rtl;
@@ -78,6 +79,8 @@
   --ag-border-color: transparent;
   --ag-input-border-color: #d0d5dd;
   --ag-input-focus-border-color: #1890ff;
+  --ag-icon-font-family: 'agGridClassic', 'agGridIcons', sans-serif;
+  --ag-icon-font-size: 16px;
   --ag-card-radius: 12px;
   --ag-wrapper-border-radius: 12px;
   --ag-row-height: 58px;
@@ -92,6 +95,10 @@
 
 :host ::ng-deep .ag-theme-quartz.advanced-grid .ag-header {
   box-shadow: inset 0 -1px 0 rgba(15, 23, 42, 0.1);
+}
+
+:host ::ng-deep .ag-theme-quartz.advanced-grid .ag-icon {
+  font-family: var(--ag-icon-font-family);
 }
 
 :host ::ng-deep .ag-theme-quartz.advanced-grid .ag-header-cell-label {
@@ -131,3 +138,4 @@
 :host ::ng-deep .ag-theme-quartz.advanced-grid .ag-tool-panel-wrapper {
   direction: rtl;
 }
+

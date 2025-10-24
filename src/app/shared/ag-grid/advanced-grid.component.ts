@@ -1,4 +1,3 @@
-import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 import { CommonModule } from '@angular/common';
@@ -45,7 +44,7 @@ export class AdvancedGridComponent<TData = any> implements OnChanges {
   @Input() loading = false;
   @Input() enableRtl = true;
   @Input() showToolbar = true;
-  @Input() showRowGroupPanel = true;
+  @Input() showRowGroupPanel = false;
   @Input() gridClass = '';
   @Input() gridHeight = '100%';
   @Input() suppressExcelExport = false;
@@ -53,6 +52,7 @@ export class AdvancedGridComponent<TData = any> implements OnChanges {
   @Input() extraToolbarTooltip?: string;
   @Input() gridOptions: GridOptions<TData> = {};
   @Input() sideBar: SideBarDef | boolean | null = null;
+  @Input() enableRangeSelection = false;
 
   @Output() gridReady = new EventEmitter<GridReadyEvent<TData>>();
   @Output() refreshRequested = new EventEmitter<void>();
@@ -69,7 +69,8 @@ export class AdvancedGridComponent<TData = any> implements OnChanges {
       changes['defaultColDef'] ||
       changes['enableRtl'] ||
       changes['sideBar'] ||
-      changes['showRowGroupPanel']
+      changes['showRowGroupPanel'] ||
+      changes['enableRangeSelection']
     ) {
       this.resolvedGridOptions = this.buildGridOptions();
     }
@@ -105,25 +106,8 @@ export class AdvancedGridComponent<TData = any> implements OnChanges {
     const baseOptions: GridOptions<TData> = {
       animateRows: true,
       enableRtl: this.enableRtl,
-      rowGroupPanelShow: this.showRowGroupPanel ? 'always' : 'never',
-      sideBar:
-        this.sideBar ??
-        ({
-          toolPanels: [
-            { id: 'columns', labelDefault: 'ستون‌ها', iconKey: 'columns', toolPanel: 'agColumnsToolPanel' },
-            { id: 'filters', labelDefault: 'فیلترها', iconKey: 'filter', toolPanel: 'agFiltersToolPanel' }
-          ],
-          defaultToolPanel: 'columns'
-        } as SideBarDef),
-      statusBar: {
-        statusPanels: [
-          { statusPanel: 'agTotalRowCountComponent', align: 'left' },
-          { statusPanel: 'agFilteredRowCountComponent' }
-        ]
-      },
       suppressDragLeaveHidesColumns: false,
       suppressScrollOnNewData: false,
-      enableRangeSelection: true,
       localeText: this.faLocale,
       autoSizeStrategy: { type: 'fitGridWidth' },
       defaultColDef: {
@@ -139,6 +123,18 @@ export class AdvancedGridComponent<TData = any> implements OnChanges {
       }
     };
 
+    if (this.showRowGroupPanel) {
+      baseOptions.rowGroupPanelShow = 'always';
+    }
+
+    if (this.enableRangeSelection) {
+      baseOptions.enableRangeSelection = true;
+    }
+
+    if (this.sideBar) {
+      baseOptions.sideBar = this.sideBar;
+    }
+
     const incomingDefault = this.gridOptions?.defaultColDef ?? {};
 
     baseOptions.defaultColDef = {
@@ -148,18 +144,9 @@ export class AdvancedGridComponent<TData = any> implements OnChanges {
     };
 
     if (this.gridOptions) {
-      const { defaultColDef: _, ...rest } = this.gridOptions;
+      const { defaultColDef: _omit, ...rest } = this.gridOptions;
       Object.assign(baseOptions, rest);
     }
-
-    // if (!baseOptions.localeText) {
-    //   baseOptions.localeText = AG_GRID_LOCALE_IR;
-    // } else {
-    //   baseOptions.localeText = {
-    //     ...AG_GRID_LOCALE_IR,
-    //     ...baseOptions.localeText
-    //   };
-    // }
 
     return baseOptions;
   }
