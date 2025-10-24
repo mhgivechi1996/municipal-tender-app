@@ -11,6 +11,7 @@ export interface GridActionButtonConfig<TData = unknown> {
   nzType?: 'primary' | 'default' | 'dashed' | 'text' | 'link';
   nzShape?: 'circle' | 'round';
   nzDanger?: boolean;
+  className?: string;
   tooltip?: string;
   ariaLabel?: string;
   disabled?: boolean | ((record: TData | null, params: ICellRendererParams<TData>) => boolean);
@@ -39,6 +40,7 @@ type GridActionRendererParams<TData> = ICellRendererParams<TData> & {
         [attr.aria-label]="button.ariaLabel || button.icon"
         (click)="onButtonClick($event, button)"
         [nzTooltipTitle]="button.tooltip ?? null"
+        [ngClass]="button.className"
       >
         <span nz-icon [nzType]="button.icon"></span>
       </button>

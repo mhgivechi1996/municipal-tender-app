@@ -1,0 +1,47 @@
+<div class="advanced-grid-container">
+  <div class="grid-toolbar" *ngIf="showToolbar">
+    <div class="grid-toolbar-left">
+      <button
+        nz-button
+        nzType="default"
+        class="toolbar-button refresh-button"
+        [disabled]="loading"
+        nz-tooltip
+        nzTooltipTitle="بارگذاری مجدد داده‌ها"
+        (click)="handleRefreshClick()"
+      >
+        <span nz-icon nzType="reload"></span>
+        <span>رفرش</span>
+      </button>
+      <button
+        nz-button
+        nzType="default"
+        class="toolbar-button export-button"
+        *ngIf="!suppressExcelExport"
+        nz-tooltip
+        nzTooltipTitle="دانلود خروجی اکسل"
+        (click)="handleExcelExport()"
+      >
+        <span nz-icon nzType="file-excel"></span>
+        <span>خروجی اکسل</span>
+      </button>
+      <ng-content select="[grid-toolbar-start]"></ng-content>
+    </div>
+    <div class="grid-toolbar-right">
+      <ng-content select="[grid-toolbar-end]"></ng-content>
+    </div>
+  </div>
+
+  <div class="grid-wrapper" [style.height]="gridHeight">
+    <ag-grid-angular
+      [class.ag-theme-quartz]="true"
+      class="advanced-grid"
+      [ngClass]="gridClass"
+      [columnDefs]="columnDefs"
+      [rowData]="rowData"
+      [gridOptions]="resolvedGridOptions"
+      (gridReady)="onGridReady($event)"
+      [localeText]="faLocale"
+    ></ag-grid-angular>
+  </div>
+</div>

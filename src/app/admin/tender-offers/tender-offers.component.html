@@ -14,12 +14,8 @@
   </div>
 
   <nz-collapse class="filter-collapse" nzGhost [nzBordered]="false">
-    <nz-collapse-panel
-      class="filter-collapse-panel"
-      [(nzActive)]="filtersExpanded"
-      [nzShowArrow]="false"
-      [nzHeader]="filtersHeader"
-    >
+    <nz-collapse-panel class="filter-collapse-panel" [(nzActive)]="filtersExpanded" [nzShowArrow]="false"
+      [nzHeader]="filtersHeader">
       <div class="floating-filter-layout">
         <div class="floating-filter-toolbar">
           <div class="button-group">
@@ -28,7 +24,8 @@
               رو به اتمام
               <span class="button-note">(۷ روز آینده)</span>
             </button>
-            <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته اخیر</button>
+            <button class="toolbar-button" type="button" (click)="filterRecentlyStarted()">شروع شده در هفته
+              اخیر</button>
             <button class="toolbar-button link" type="button" (click)="clearDateFilters()">حذف فیلتر تاریخ</button>
           </div>
           <div class="button-group">
@@ -46,10 +43,12 @@
           <div class="button-group">
             <button class="toolbar-button" type="button" (click)="filterHasParticipants()">با شرکت‌کننده</button>
             <button class="toolbar-button" type="button" (click)="filterNoParticipants()">بدون شرکت‌کننده</button>
-            <button class="toolbar-button link" type="button" (click)="clearParticipationFilter()">حذف فیلتر مشارکت</button>
+            <button class="toolbar-button link" type="button" (click)="clearParticipationFilter()">حذف فیلتر
+              مشارکت</button>
           </div>
           <div class="button-group">
-            <button class="toolbar-button primary" type="button" (click)="clearAllFilters()">بازنشانی همه فیلترها</button>
+            <button class="toolbar-button primary" type="button" (click)="clearAllFilters()">بازنشانی همه
+              فیلترها</button>
           </div>
         </div>
       </div>
@@ -70,7 +69,7 @@
 
   <div class="grid-card">
     <div class="grid-wrapper">
-      <ag-grid-angular
+      <!-- <ag-grid-angular
         class="ag-theme-quartz tender-grid"
         [theme]="'legacy'"
         [enableRtl]="true"
@@ -78,7 +77,18 @@
         [defaultColDef]="defaultColumnDefs"
         [rowData]="rowData"
         (gridReady)="onGridReady($event)"
-      ></ag-grid-angular>
+      ></ag-grid-angular> -->
+
+<app-advanced-grid
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColumnDefs"
+  [rowData]="rowData"
+  [loading]="loading"
+  [gridClass]="'tender-grid'"
+  [gridHeight]="'400px'"
+  (gridReady)="onGridReady($event)"
+  (refreshRequested)="loadTenderOffers()"
+></app-advanced-grid>
     </div>
   </div>
 </div>

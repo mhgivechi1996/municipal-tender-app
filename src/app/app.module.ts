@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import en from '@angular/common/locales/en';
+import { SharedModule } from './shared/sared.module';
 
 import { NZ_ICONS } from 'ng-zorro-antd/icon';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
@@ -45,7 +46,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     BrowserAnimationsModule,
     ScrollingModule,
     DragDropModule,
-    RouterModule.forRoot(routes, { enableTracing: false })// <-- debugging purposes only
+    RouterModule.forRoot(routes, { enableTracing: false }),// <-- debugging purposes only
+    SharedModule
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],

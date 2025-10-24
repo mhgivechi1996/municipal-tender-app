@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { AgGridModule } from 'ag-grid-angular';
+import { AdvancedGridComponent } from '../../shared/ag-grid/advanced-grid.component';
 import {
   AllCommunityModule,
   ColDef,
@@ -31,7 +31,14 @@ import { GridActionButtonsRendererComponent } from '../../shared/grid-action-but
 @Component({
   selector: 'app-admin-tender-offers',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgZorroAntdModule, AgGridModule, GridActionButtonsRendererComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgZorroAntdModule,
+    AdvancedGridComponent,
+    GridActionButtonsRendererComponent
+  ],
   templateUrl: './tender-offers.component.html',
   styleUrl: './tender-offers.component.css'
 })
@@ -384,7 +391,7 @@ export class AdminTenderOffersComponent implements OnInit {
     this.refreshCounts();
   }
 
-  private loadTenderOffers(): void {
+  loadTenderOffers(): void {
     this.loading = true;
     if (this.gridApi) {
       this.gridApi.showLoadingOverlay();
